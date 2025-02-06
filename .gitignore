@@ -7,7 +7,7 @@
 /bazel-out
 
 # Node
-/node_modules
+node_modules/
 npm-debug.log
 yarn-error.log
 
@@ -74,3 +74,6 @@ build/
 
 ### VS Code ###
 .vscode/
+.angular/
+angular.json
+frontend/fibilit/node_modules/
