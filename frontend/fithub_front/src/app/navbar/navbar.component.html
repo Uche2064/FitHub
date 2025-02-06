@@ -1,0 +1,29 @@
+<section class="w-full">
+  <div class="h-16 bg-[#0d1b2b]">
+    <div class="flex items-center justify-between px-4 h-full">
+      <!-- search box -->
+      <h1 class="text-white text-2xl">Bienvenue Ucheson</h1>
+      <div
+        (click)="toggleUserOption()"
+        class="flex flex-col bg-black px-3 py-1.5 rounded-3xl cursor-pointer"
+      >
+        <h1 class="text-white">Ucheson</h1>
+      </div>
+    </div>
+  </div>
+  <div class="absolute top-16 right-0 {{ isHidden ? 'hidden' : '' }}">
+    <div class="bg-[#0d1b2b]">
+      <p
+        class="cursor-pointer px-4 py-3 text-white hover:bg-slate-600 duration-200 transition-colors"
+      >
+        Changer mot de passe
+      </p>
+      <p
+      (click)="logout()"
+        class="cursor-pointer px-4 py-3 duration-200 transition-colors hover:bg-slate-600 text-red-500"
+      >
+        Déconnexion
+      </p>
+    </div>
+  </div>
+</section>

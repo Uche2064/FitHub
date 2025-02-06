@@ -1,0 +1,194 @@
+<div
+  class="max-w-3xl mx-auto my-8 bg-white rounded-2xl shadow-xl overflow-hidden"
+>
+  <!-- Header Section -->
+  <div class="bg-gray-50 border-b px-8 py-6">
+    <h3 class="text-2xl font-bold text-gray-900">Ajouter un Client</h3>
+    <p class="mt-1 text-sm text-gray-500">
+      Remplissez les informations ci-dessous pour créer un nouveau compte client
+    </p>
+  </div>
+
+  <!-- Form Section -->
+  <form
+    [formGroup]="customerForm"
+    (ngSubmit)="addCustomer()"
+    class="px-8 py-6 space-y-6"
+  >
+    <!-- Name Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="firstName" class="block text-sm font-medium text-gray-700">
+          Prénoms
+        </label>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            placeholder="Entrez les prénoms"
+            class="block w-full px-4 py-3 rounded-lg border border-gray-300 transition-colors"
+            [ngClass]="{
+              'border-red-400':
+                customerForm.get('firstName')?.invalid &&
+                customerForm.get('firstName')?.touched
+            }"
+          />
+        </div>
+        <p
+          class="mt-1 text-sm text-red-400"
+          *ngIf="
+            customerForm.get('firstName')?.invalid &&
+            customerForm.get('firstName')?.touched
+          "
+        >
+          Le prénom est requis (min 2 caractères)
+        </p>
+      </div>
+
+      <div>
+        <label for="lastName" class="block text-sm font-medium text-gray-700">
+          Nom
+        </label>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            placeholder="Entrez le nom"
+            class="block w-full px-4 py-3 rounded-lg border border-gray-300 transition-colors"
+            [ngClass]="{
+              'border-red-400':
+                customerForm.get('lastName')?.invalid &&
+                customerForm.get('lastName')?.touched
+            }"
+          />
+        </div>
+        <p
+          class="mt-1 text-sm text-red-400"
+          *ngIf="
+            customerForm.get('lastName')?.invalid &&
+            customerForm.get('lastName')?.touched
+          "
+        >
+          Le nom est requis (min 2 caractères)
+        </p>
+      </div>
+    </div>
+
+    <!-- Contact Information -->
+    <div>
+      <label for="phoneNumber" class="block text-sm font-medium text-gray-700">
+        Numéro de Téléphone
+      </label>
+      <div class="mt-1 relative rounded-md shadow-sm">
+        <input
+          type="text"
+          id="phoneNumber"
+          formControlName="phoneNumber"
+          placeholder="Entrez le numéro"
+          class="block w-full px-4 py-3 rounded-lg border border-gray-300 transition-colors"
+          [ngClass]="{
+            'border-red-400':
+              customerForm.get('phoneNumber')?.invalid &&
+              customerForm.get('phoneNumber')?.touched
+          }"
+        />
+      </div>
+      <p
+        class="mt-1 text-sm text-red-400"
+        *ngIf="
+          customerForm.get('phoneNumber')?.invalid &&
+          customerForm.get('phoneNumber')?.touched
+        "
+      >
+        Le numéro est obligatoire
+      </p>
+    </div>
+
+    <!-- Account Information -->
+    <div class="space-y-6">
+      <div>
+        <label for="userName" class="block text-sm font-medium text-gray-700">
+          Nom d'utilisateur
+        </label>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <input
+            type="text"
+            id="userName"
+            formControlName="userName"
+            placeholder="Entrez le nom d'utilisateur"
+            class="block w-full px-4 py-3 rounded-lg border border-gray-300 transition-colors"
+            [ngClass]="{
+              'border-red-400':
+                customerForm.get('userName')?.invalid &&
+                customerForm.get('userName')?.touched
+            }"
+          />
+        </div>
+        <p
+          class="mt-1 text-sm text-red-400"
+          *ngIf="
+            customerForm.get('userName')?.invalid &&
+            customerForm.get('userName')?.touched
+          "
+        >
+          Min 4 caractères requis
+        </p>
+      </div>
+
+      <div>
+        <label for="password" class="block text-sm font-medium text-gray-700">
+          Mot de Passe
+        </label>
+        <div class="mt-1 relative rounded-md shadow-sm">
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            placeholder="Entrez le mot de passe"
+            class="block w-full px-4 py-3 rounded-lg border border-gray-300 transition-colors"
+            [ngClass]="{
+              'border-red-400':
+                customerForm.get('password')?.invalid &&
+                customerForm.get('password')?.touched
+            }"
+          />
+        </div>
+        <p
+          class="mt-1 text-sm text-red-400"
+          *ngIf="
+            customerForm.get('password')?.invalid &&
+            customerForm.get('password')?.touched
+          "
+        >
+          Min 6 caractères requis
+        </p>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="pt-4">
+      <button
+        type="submit"
+        [disabled]="customerForm.invalid"
+        class="w-full flex justify-center items-center px-6 py-3 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-[#00336e] hover:bg-blue-900 focus:outline-none focus:ring-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z"
+          />
+          <path
+            d="M16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"
+          />
+        </svg>
+        Ajouter le Client
+      </button>
+    </div>
+  </form>
+</div>

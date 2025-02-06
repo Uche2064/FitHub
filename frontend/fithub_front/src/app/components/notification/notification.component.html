@@ -1,0 +1,10 @@
+<div
+  *ngIf="message.content != null"
+  class="{{
+    message.type == 'success' ? 'bg-green-400' : 'bg-red-400'
+  }} mb-5 px-4 py-3 rounded-lg"
+>
+  <span class="text-white font-medium">
+    {{ message.content }}
+  </span>
+</div>

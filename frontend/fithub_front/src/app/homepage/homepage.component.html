@@ -1,0 +1,14 @@
+<section class="flex">
+  <app-sidebar></app-sidebar>
+  <div class="flex flex-1 flex-col">
+    <app-navbar></app-navbar>
+    <div [ngSwitch]="currentView" class="bg-slate-100 h-screen px-4 py-3">
+      <div *ngSwitchCase="views.Dashboard">
+        <app-dashboard></app-dashboard>
+      </div>
+      <div *ngSwitchCase="views.AddClient">
+        <app-add-client></app-add-client>
+      </div>
+    </div>
+  </div>
+</section>
