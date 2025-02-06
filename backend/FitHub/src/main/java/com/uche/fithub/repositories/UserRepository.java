@@ -8,4 +8,8 @@ import com.uche.fithub.entities.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     public User findByUsername(String username);
+
+    public User findByEmail(String email);
+
+    public User findByPhoneNumber(String phoneNumber);
 }

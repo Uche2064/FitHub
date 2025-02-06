@@ -74,5 +74,3 @@ build/
 
 ### VS Code ###
 .vscode/
-.angular/
-angular.json

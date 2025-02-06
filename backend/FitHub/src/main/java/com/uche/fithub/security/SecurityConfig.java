@@ -42,11 +42,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityInterceptor(HttpSecurity httpSecurity)
             throws Exception {
         return httpSecurity
+                .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         request -> request
-                                .requestMatchers("/api/v1/auth/user/*").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/admin/register-user").hasRole("ADMIN")
+                                .requestMatchers("/api/v1/user/*").permitAll()
                                 .requestMatchers("/api/v1/customer/*").hasRole("USER")
                                 .requestMatchers("/api/v1/pack/*").hasRole("USER")
                                 .requestMatchers("/api/v1/subscription/*").hasRole("USER")

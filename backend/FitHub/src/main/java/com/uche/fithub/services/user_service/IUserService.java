@@ -4,12 +4,14 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.uche.fithub.dto.user_dto.AddUserSchema;
 import com.uche.fithub.dto.user_dto.LoginUserSchema;
-import com.uche.fithub.dto.user_dto.UpdateUserSchema;
+import com.uche.fithub.dto.user_dto.UpdatePasswordUserSchema;
 import com.uche.fithub.dto.user_dto.UserDto;
 
 @Service
 public interface IUserService {
     public Map<String, Object> loginUser(LoginUserSchema user);
-    public UserDto changePassword(UpdateUserSchema user);
+    public UserDto changePassword(UpdatePasswordUserSchema user);
+    public UserDto addUser(AddUserSchema user);
 }

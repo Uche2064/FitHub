@@ -38,7 +38,6 @@ public class CustomerServiceImpl implements ICustomerService {
         newCustomer.setLastName(customer.getLastName());
         newCustomer.setPhoneNumber(customer.getPhoneNumber());
         newCustomer.setRegistrationDate(LocalDate.now());
-        newCustomer.setPassword(customer.getPassword());
         newCustomer.setUsername(customer.getUsername());
         Customer createdCustomer = customerRepository.save(newCustomer);
         return createdCustomer.getDto();

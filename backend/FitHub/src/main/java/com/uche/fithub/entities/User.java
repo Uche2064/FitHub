@@ -31,6 +31,8 @@ public class User {
     @GeneratedValue
     private Long id;
 
+    private String fullName;
+
     @Column(unique = true)
     private String username;
 
@@ -38,6 +40,12 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Roles role;
+
+    @Column(unique = true)
+    private String email;
+
+    @Column(unique = true, nullable = true)
+    private String phoneNumber;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -51,7 +59,10 @@ public class User {
         UserDto dto = new UserDto();
         dto.setId(this.id);
         dto.setUsername(this.username);
+        dto.setEmail(this.email);
+        dto.setFullName(this.fullName);
         dto.setCreatedAt(this.addedAt);
+        dto.setPhone(this.phoneNumber);
         dto.setUpdatedAt(this.updatedAt);
         dto.setRole(this.role);
         return dto;

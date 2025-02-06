@@ -37,7 +37,6 @@ public class Customer {
     @Column(nullable = false)
     private LocalDate registrationDate;
 
-    private String password;
 
     @Column(nullable = false, unique = true)
     private String phoneNumber;

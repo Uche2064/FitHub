@@ -11,12 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uche.fithub.dto.user_dto.AddUserSchema;
 import com.uche.fithub.dto.user_dto.UserDto;
 import com.uche.fithub.services.admin_service.AdminService;
-import com.uche.fithub.services.auth_service.AuthService;
-import com.uche.fithub.services.user_service.UserService;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/api/v1/auth/admin")
 @RestController
