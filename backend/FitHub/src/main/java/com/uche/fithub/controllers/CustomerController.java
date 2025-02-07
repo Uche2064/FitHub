@@ -28,7 +28,7 @@ public class CustomerController {
     @Autowired
     private CustomerServiceImpl customerService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> getCustomers() {
         try {
             return new ResponseEntity<>(customerService.getCustomers(), HttpStatus.OK);
@@ -38,7 +38,7 @@ public class CustomerController {
         }
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<?> createCustomer(@Valid @RequestBody AddCustomerSchema customer) {
         try {
             CustomerDto custom = customerService.register(customer);

@@ -3,11 +3,15 @@ package com.uche.fithub.services.user_service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +20,19 @@ import com.uche.fithub.entities.User;
 import com.uche.fithub.dto.user_dto.AddUserSchema;
 import com.uche.fithub.dto.user_dto.LoginUserSchema;
 import com.uche.fithub.dto.user_dto.UpdatePasswordUserSchema;
+import com.uche.fithub.dto.user_dto.UpdateUserInfoSchema;
 import com.uche.fithub.dto.user_dto.UserDto;
 import com.uche.fithub.repositories.UserRepository;
 import com.uche.fithub.services.AuthService;
 import com.uche.fithub.utils.JwtUtils;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService implements IUserService {
     @Autowired
-    private UserRepository mRepository;
+    private UserRepository userRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -62,31 +68,26 @@ public class UserService implements IUserService {
     @Override
     public UserDto changePassword(UpdatePasswordUserSchema user) {
         String username = authService.getAuthenticatedUsername();
-        User dbUser = mRepository.findByUsername(username);
-
-        if (!bCryptPasswordEncoder.matches(user.getOldPassword(), dbUser.getPassword())) {
-            throw new RuntimeException("Ancien mot de passe incorrect");
-        }
+        User dbUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Ancien mot de passe incorrect"));
 
         dbUser.setPassword(bCryptPasswordEncoder.encode(user.getNewPassword()));
-        User savedUser = mRepository.save(dbUser);
+        User savedUser = userRepository.save(dbUser);
         return savedUser.getDto();
+
     }
 
     @Override
     public UserDto addUser(AddUserSchema user) {
-        User dbUser = mRepository.findByUsername(user.getUsername());
-        if (!Objects.isNull(dbUser)) {
-            throw new EntityExistsException(
-                    "Un utilisateur avec le nom d'utilisateur " + user.getUsername() + " existe déjà");
-        }
-        if (!Objects.isNull(mRepository.findByEmail(user.getEmail()))) {
-            throw new EntityExistsException("Un utilisateur avec l'email " + user.getEmail() + " existe déjà");
-        }
+        userRepository.findByUsername(user.getUsername()).orElseThrow(() -> new EntityExistsException(
+                "Un utilisateur avec le nom d'utilisateur " + user.getUsername() + " existe déjà"));
 
-        if (!Objects.isNull(mRepository.findByPhoneNumber(user.getPhoneNumber()))
-                && !Objects.isNull(user.getPhoneNumber())) {
-            throw new EntityExistsException("Un utilisateur avec le numéro " + user.getPhoneNumber() + " existe déjà");
+        userRepository.findByEmail(user.getEmail()).orElseThrow(
+                () -> new EntityExistsException("Un utilisateur avec l'email " + user.getEmail() + " existe déjà"));
+
+        if (!Objects.isNull(user.getPhoneNumber())) {
+            userRepository.findByPhoneNumber(user.getPhoneNumber()).orElseThrow(() -> new EntityExistsException(
+                    "Un utilisateur avec le numéro " + user.getPhoneNumber() + " existe déjà"));
         }
 
         User newUser = new User();
@@ -96,8 +97,23 @@ public class UserService implements IUserService {
         newUser.setEmail(user.getEmail());
         newUser.setPhoneNumber(user.getPhoneNumber());
         newUser.setRole(Roles.ROLE_USER);
-        User savedUser = mRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
         return savedUser.getDto();
+    }
+
+    @Override
+    public UserDto updateUserInfo(UpdateUserInfoSchema user) {
+        String username = authService.getAuthenticatedUsername();
+        User dbUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Utilisateur non trouvé"));
+
+        Optional.ofNullable(user.getEmail()).ifPresent(dbUser::setEmail);
+        Optional.ofNullable(user.getUsername()).ifPresent(dbUser::setUsername);
+        Optional.ofNullable(user.getFullName()).ifPresent(dbUser::setFullName);
+        Optional.ofNullable(user.getPhone()).ifPresent(dbUser::setPhoneNumber);
+        userRepository.save(dbUser);
+        return dbUser.getDto();
+
     }
 
 }

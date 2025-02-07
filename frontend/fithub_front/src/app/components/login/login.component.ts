@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, NgModule, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LoginSchema } from '../../models/LoginSchema';
@@ -11,16 +17,29 @@ import { NotificationComponent } from '../../utils/notification/notification.com
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule, NotificationComponent, RouterLink],
+  imports: [
+    CommonModule,
+    FormsModule,
+    NotificationComponent,
+    RouterLink,
+    ReactiveFormsModule,
+  ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
+  loginForm: FormGroup;
   constructor(
+    private fb: FormBuilder,
     private authService: AuthService,
     private route: Router,
     private notificationService: NotificationService // Add the notification service here
-  ) {}
+  ) {
+    this.loginForm = this.fb.group({
+      username: ['', [Validators.required, Validators.minLength(5)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+    });
+  }
   ngOnInit(): void {
     if (this.authService.isAuthenticated()) {
       this.route.navigate(['']);
@@ -32,31 +51,38 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.isLoading = true;
-    this.authService.loginUser(this.loginCredentials).subscribe(
-      (token) => {
-        this.authService.saveToken(token.token);
-        this.notificationService.notify(
-          new CustomMessage('Connexion réussie', 'success')
-        );
-        setTimeout(() => {
-          this.route.navigate(['']);
-          this.isLoading = false;
 
-        }, 3000);
-      },
-      (error: HttpErrorResponse) => {
-        console.log(error);
-        this.notificationService.notify(
-          new CustomMessage("Identifiant invalide", 'error')
-        );
-        this.isLoading = false;
-      }
-    );
+    if (this.loginForm.valid) {
+      this.loginCredentials = this.loginForm.value;
+      console.log(this.loginCredentials);
+      this.authService.loginUser(this.loginCredentials).subscribe(
+        (token) => {
+          this.authService.saveToken(token.token);
+          this.notificationService.notify(
+            new CustomMessage('Connexion réussie', 'success')
+          );
+          setTimeout(() => {
+            this.route.navigate(['']);
+            this.isLoading = false;
+          }, 3000);
+        },
+        (error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.notificationService.notify(
+              new CustomMessage('Identifiant ou mot de passe invalide', 'error')
+            );
+          } else {
+            this.notificationService.notify(
+              new CustomMessage('Erreur lors de la connexion', 'error')
+            );
+          }
+          this.isLoading = false;
+        }
+      );
+    }
   }
 
   tooglePasswordVisibility() {
-    if (this.loginCredentials.password != '') {
-      this.showPassword = !this.showPassword;
-    }
+    this.showPassword = !this.showPassword;
   }
 }

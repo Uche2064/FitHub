@@ -10,7 +10,7 @@ import { Observable, of, Subject } from 'rxjs';
 })
 export class AuthService {
   constructor(private router: Router, private http: HttpClient) {}
-  private loginUrl: string = 'http://localhost:8081/api/v1/auth/user/login';
+  private loginUrl: string = 'http://localhost:8081/api/v1/user/login';
   isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
     return token ? true : false;
