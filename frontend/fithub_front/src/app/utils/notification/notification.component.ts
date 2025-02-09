@@ -12,7 +12,7 @@ import { CustomMessage } from './CustomMessage';
 export class NotificationComponent implements OnInit {
   message: CustomMessage = new CustomMessage(null, null);
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(private notificationService: NotificationService) { }
 
   ngOnInit() {
     this.notificationService.notification$.subscribe((msg) => {
@@ -20,7 +20,7 @@ export class NotificationComponent implements OnInit {
       this.message.type = msg.type;
       setTimeout(() => {
         this.message = new CustomMessage(null, null);
-      }, 2000);
+      }, 3000);
     });
   }
 }

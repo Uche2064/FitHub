@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { LoginSchema } from '../../models/LoginSchema';
+import { LoginSchema } from '../login/model/LoginSchema';
 import { AuthService } from '../../services/auth_service/auth.service';
 import { NotificationService } from '../../services/notification_service/notification.service';
 import { CustomMessage } from '../../utils/notification/CustomMessage';
@@ -15,7 +15,6 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AddUserSchema } from './models/AddUserSchema';
-import { AddCustomerSchema } from '../add-client/models/AddCustomerSchema';
 
 @Component({
   selector: 'app-register-user',

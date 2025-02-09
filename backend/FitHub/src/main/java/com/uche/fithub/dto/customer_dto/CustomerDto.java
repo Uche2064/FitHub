@@ -16,7 +16,6 @@ public class CustomerDto {
     private LocalDate registrationDate;
 
     private String phoneNumber;
-    private String username;
     private boolean activeSubscription;
 
 }

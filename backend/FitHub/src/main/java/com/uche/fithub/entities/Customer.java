@@ -31,8 +31,6 @@ public class Customer {
     @Column(nullable = false)
     private String firstName;
 
-    @Column(unique = true)
-    private String username;
 
     @Column(nullable = false)
     private LocalDate registrationDate;
@@ -58,7 +56,6 @@ public class Customer {
         customerDto.setFirstName(this.firstName);
         customerDto.setLastName(this.lastName);
         customerDto.setRegistrationDate(this.registrationDate);
-        customerDto.setUsername(this.username);
         customerDto.setPhoneNumber(this.phoneNumber);
         customerDto.setActiveSubscription(this.activeSubscription);
 

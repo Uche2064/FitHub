@@ -1,4 +1,4 @@
 export enum Views {
-  Dashboard,
-  AddClient,
+  DASHBOARD,
+  CLIENT,
 }

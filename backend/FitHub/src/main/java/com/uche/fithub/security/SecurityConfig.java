@@ -46,10 +46,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         request -> request
-                                .requestMatchers("/api/v1/user/*").permitAll()
-                                .requestMatchers("/api/v1/customer/*").hasRole("USER")
-                                .requestMatchers("/api/v1/pack/*").hasRole("USER")
-                                .requestMatchers("/api/v1/subscription/*").hasRole("USER")
+
+                                .requestMatchers("/api/v1/user/**", "/api/v1/auth/**").permitAll()
+                                .requestMatchers("/api/v1/customer/**").hasRole("USER")
+                                .requestMatchers("/api/v1/pack/**").hasRole("USER")
+                                .requestMatchers("/api/v1/subscription/**").hasRole("USER")
                                 .anyRequest()
                                 .authenticated())
                 .addFilterBefore(new JwtFilter(customUserDetailsService, jwtUtils),

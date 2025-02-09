@@ -13,6 +13,9 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,9 +32,10 @@ public class CustomerController {
     private CustomerServiceImpl customerService;
 
     @GetMapping
-    public ResponseEntity<?> getCustomers() {
+    public ResponseEntity<?> getCustomers(@PageableDefault(size = 5, sort = "firstName") Pageable pageable) {
         try {
-            return new ResponseEntity<>(customerService.getCustomers(), HttpStatus.OK);
+            Page<CustomerDto> customers = customerService.getPaginatedCustomers(pageable);            
+            return new ResponseEntity<>(customers, HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -65,19 +69,6 @@ public class CustomerController {
         try {
             CustomerDto updateCustomer = customerService.updateCustomerInfo(customer, id);
             return new ResponseEntity<>(updateCustomer, HttpStatus.ACCEPTED);
-        } catch (EntityNotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(),
-                    HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @GetMapping("/{username}")
-    public ResponseEntity<?> getCustomerByUsername(@PathVariable String username) {
-        try {
-            CustomerDto customer = customerService.findClientByUsername(username);
-            return new ResponseEntity<>(customer, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (Exception e) {

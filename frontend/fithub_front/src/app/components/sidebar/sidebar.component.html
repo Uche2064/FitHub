@@ -1,16 +1,89 @@
-<section class="w-70 ">
-  <!-- header -->
-  <div>
-    <!-- image -->
-     <img src="/assets/images/FH.png" alt="logo">
+<section class="w-80 h-screen bg-gray-50 flex flex-col">
+  <div class="flex flex-col flex-grow">
+    <!-- header -->
+    <div class="px-4 py-3 border-b border-slate-100">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-1.5">
+          <!-- image -->
+          <div>
+            <img [src]="logo" alt="logo" />
+          </div>
 
+          <!-- title -->
+          <h4 class="font-semibold">FitHub</h4>
+        </div>
 
-    <!-- title -->
-    FitHub
+        <!-- hide menu button -->
+        <div
+          class="h-5 w-5 bg-gray-300 rounded-full flex justify-center items-center"
+        >
+          <fa-icon [icon]="faHome" class="text-white text-sm"></fa-icon>
+        </div>
+      </div>
+    </div>
 
-    <!-- hide menu button -->
-    
+    <!-- navigation -->
+    <div class="px-4 py-3">
+      <h3 class="text-lg text-gray-600 mb-4">Menu principal</h3>
+      <nav>
+        <div
+          (click)="changeView(views.DASHBOARD)"
+          class="flex justify-between hover:bg-slate-200 rounded-xl px-3 py-2 cursor-pointer mb-2"
+        >
+          <p class="space-x-1.5">
+            <fa-icon [icon]="faDashboard" class="icon"></fa-icon>
+            <span href="#" class="text-gray-600 hover:text-gray-800">
+              Tableau de board
+            </span>
+          </p>
+        </div>
+        <div
+          class="flex justify-between hover:bg-slate-200 rounded-xl px-3 py-2 cursor-pointer mb-2"
+          (click)="changeView(views.CLIENT)"
+        >
+          <p class="space-x-1.5">
+            <fa-icon [icon]="faClient" class="icon"></fa-icon>
+            <span href="#" class="text-gray-600 hover:text-gray-800">
+              Clients
+            </span>
+          </p>
+          <fa-icon [icon]="faArrowDown" class="text-slate-300"></fa-icon>
+        </div>
 
+        <div
+          class="flex justify-between hover:bg-slate-200 rounded-xl px-3 py-2 cursor-pointer"
+        >
+          <p class="space-x-1.5">
+            <fa-icon [icon]="faDumbell" class="icon"></fa-icon>
+            <span href="#" class="text-gray-600 hover:text-gray-800">
+              Packs
+            </span>
+          </p>
+          <fa-icon [icon]="faArrowDown" class="text-slate-300"></fa-icon>
+        </div>
+
+        <div
+          class="flex justify-between hover:bg-slate-200 rounded-xl px-3 py-2 cursor-pointer"
+        >
+          <p class="space-x-1.5">
+            <fa-icon [icon]="faBell" class="icon"></fa-icon>
+            <span href="#" class="text-gray-600 hover:text-gray-800">
+              Subscriptions
+            </span>
+          </p>
+          <fa-icon [icon]="faArrowDown" class="text-slate-300"></fa-icon>
+        </div>
+      </nav>
+    </div>
   </div>
-  <!-- main menu -->
+
+  <!-- footer -->
+  <div
+    class="px-4 py-3 border-t border-gray-200 hover:bg-slate-200 cursor-pointer"
+  >
+    <div class="flex items-center space-x-1.5">
+      <fa-icon [icon]="faParametre" class="icon"></fa-icon>
+      <h4 class="font-semibold text-base text-gray-400">Paramètres</h4>
+    </div>
+  </div>
 </section>

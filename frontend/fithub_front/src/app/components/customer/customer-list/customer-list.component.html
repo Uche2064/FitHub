@@ -1,0 +1,171 @@
+<h3 class="text-xl mb-3 font-semibold">Liste des clients</h3>
+<!-- Search Input -->
+<div class="flex space-x-2.5 items-center mb-3">
+  <div
+    class="bg-[#00808040] px-4 py-3 rounded-lg cursor-pointer relative transition-colors duration-300 active:bg-[#008080f0] hover:bg-[#008080c4]"
+    (click)="toggleFilters()"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polygon points="3 4 21 4 14 12 14 19 10 21 10 12 3 4" />
+    </svg>
+    <!-- filter options -->
+    <div
+      *ngIf="showFilters"
+      class="absolute bg-[#008080f0] text-white rounded-lg p-2 -right-28 top-14 shadow-lg"
+    >
+      <ul>
+        <li class="cursor-pointer hover:bg-teal-700 px-3 py-2 rounded-md" (click)="changeSort('lastName')">
+          Nom
+        </li>
+        <li class="cursor-pointer hover:bg-teal-700 px-3 py-2 rounded-md" (click)="changeSort('firstName')">
+          Prénoms
+        </li>
+        <li class="cursor-pointer hover:bg-teal-700 px-3 py-2 rounded-md" (click)="changeSort('registrationDate')">
+          Date d'enregistrement
+        </li>
+      </ul>
+    </div>
+  </div>
+  <input
+    type="search"
+    name="search-user"
+    id="search-user"
+    class="w-full bg-gray-50 px-4 py-3 border border-gray-200 rounded-lg focus:bg-gray-50 focus:border focus:border-teal-200 focus:outline-none"
+    placeholder="Rechercher un client"
+  />
+</div>
+
+<div class="overflow-x-auto">
+  <table class="min-w-full divide-y divide-gray-500 border-amber-50">
+    <thead class="bg-gray-50">
+      <tr>
+        <th
+          class="px-6 py-3 text-sm font-medium text-gray-500 uppercase tracking-wider"
+        >
+          ID
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Nom
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Prénom(s)
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Numéro de téléphone
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Date d'enregistrement
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Abonnement actif
+        </th>
+        <th
+          class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+        >
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      <tr
+        *ngFor="let customer of customers"
+        class="cursor-pointer hover:bg-gray-50 active:bg-gray-200"
+        (click)="viewCustomerDetails(customer)"
+      >
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+          {{ customer.id }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+          {{ customer.lastName }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+          {{ customer.firstName }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {{ customer.phoneNumber }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          {{ customer.registrationDate }}
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+          <span *ngIf="customer.activeSubscription; else inactive">
+            ✅ <span class="text-green-600 font-semibold">Actif</span>
+          </span>
+          <ng-template #inactive>
+            ❌ <span class="text-red-600 font-semibold">Inactif</span>
+          </ng-template>
+        </td>
+
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+          <button class="text-indigo-600 hover:text-indigo-900 mr-4">
+            Edit
+          </button>
+          <button class="text-red-600 hover:text-red-900">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Pagination Controls -->
+<div class="flex justify-between items-center py-4">
+  <button
+    class="px-4 py-2 bg-teal-500 text-white rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed"
+    (click)="prevPage()"
+    [disabled]="currentPage <= 0"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  </button>
+  <span>Page {{ currentPage + 1 }} of {{ totalPages }}</span>
+  <button
+    class="px-4 py-2 bg-teal-500 text-white rounded-md"
+    (click)="nextPage()"
+    [disabled]="currentPage >= totalPages - 1"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  </button>
+</div>

@@ -35,27 +35,38 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        final String authHeader = request.getHeader("Authorization");
+        try {
+            final String authHeader = request.getHeader("Authorization");
 
-        String username = null;
-        String jwt = null;
+            String username = null;
+            String jwt = null;
 
-        if (!Objects.isNull(authHeader) && authHeader.startsWith("Bearer ")) {
-            jwt = authHeader.substring(7);
-            username = jwtUtils.extractUsername(jwt);
-        }
-
-        if (!Objects.isNull(username) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
-            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
-            if (jwtUtils.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (!Objects.isNull(authHeader) && authHeader.startsWith("Bearer ")) {
+                jwt = authHeader.substring(7);
+                username = jwtUtils.extractUsername(jwt);
             }
+
+            if (!Objects.isNull(username) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                if (jwtUtils.validateToken(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+                            null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+            }
+
+            filterChain.doFilter(request, response);
+        } catch (ServletException e) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+        } catch (IOException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
         }
 
-        filterChain.doFilter(request, response);
+        catch (Exception e) {
+            log.error("Could not set user authentication in security context", e);
+            throw e;
+        }
     }
 
 }

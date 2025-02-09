@@ -6,7 +6,7 @@ import { Views } from '../../utils/view.enum';
   providedIn: 'root'
 })
 export class SharedViewService {
-  private view  = new BehaviorSubject<Views>(Views.Dashboard);
+  private view  = new BehaviorSubject<Views>(Views.DASHBOARD);
 
   viewObservable$: Observable<Views> = this.view.asObservable();
   constructor() { }

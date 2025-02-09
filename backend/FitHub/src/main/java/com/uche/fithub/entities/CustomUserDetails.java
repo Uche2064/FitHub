@@ -3,17 +3,17 @@ package com.uche.fithub.entities;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.AllArgsConstructor;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    private final User user;
+    public User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.uche.fithub.entities.User;
+import com.uche.fithub.entities.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -27,10 +27,16 @@ public class JwtUtils {
     @Value("${app.expiration-time}")
     private long expirationTime;
 
-    public String generateToken(User user) {
+    public String generateToken(CustomUserDetails user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", user.getRole());
+        claims.put("role", user.user.getRole());
         return createToken(claims, user.getUsername());
+    }
+
+    public String generateTokenFromUsername(String username) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", "ROLE_USER");
+        return createToken(claims, username);
     }
 
     @SuppressWarnings("deprecation")

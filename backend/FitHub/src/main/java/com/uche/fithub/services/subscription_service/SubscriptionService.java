@@ -51,7 +51,7 @@ public class SubscriptionService implements ISubscriptionService {
 
         // check if customer is already subscribed to a pack
         if (customer.isActiveSubscription()) {
-            throw new EntityExistsException("L'abonné '" + customer.getUsername() + "' est déjà souscrit à un pack");
+            throw new EntityExistsException("L'abonné '" + customer.getFirstName() + ' ' + customer.getLastName() + "' est déjà souscrit à un pack");
         }
 
         // create new sub

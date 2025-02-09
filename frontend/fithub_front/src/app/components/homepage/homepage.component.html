@@ -1,13 +1,15 @@
-<section class="flex">
-  <app-sidebar></app-sidebar>
-  <div class="flex flex-1 flex-col">
+<section class="flex h-screen">
+  <app-sidebar class="fixed"></app-sidebar>
+  <div class="flex flex-1 flex-col ml-80">
     <app-navbar></app-navbar>
-    <div [ngSwitch]="currentView" class="bg-slate-100 h-screen px-4 py-3">
-      <div *ngSwitchCase="views.Dashboard">
-        <app-dashboard></app-dashboard>
-      </div>
-      <div *ngSwitchCase="views.AddClient">
-        <app-add-client></app-add-client>
+    <div class="mt-16 flex-1 overflow-y-auto">
+      <div [ngSwitch]="currentView" class="bg-white px-4 py-3 max-h-min">
+        <div *ngSwitchCase="views.DASHBOARD">
+          <app-dashboard></app-dashboard>
+        </div>
+        <div *ngSwitchCase="views.CLIENT">
+          <app-customer></app-customer>
+        </div>
       </div>
     </div>
   </div>

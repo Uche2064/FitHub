@@ -1,0 +1,175 @@
+<div class="max-h-full bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+  <!-- Header Section -->
+  <div class="bg-gray-50 border-b border-slate-300 px-8 py-6">
+    <h3 class="text-xl font-semibold text-gray-900">Ajouter un Client</h3>
+    <p class="mt-1 text-sm text-gray-500">
+      Remplissez les informations ci-dessous pour créer un nouveau compte
+      customer
+    </p>
+  </div>
+  <div class="px-8 my-2">
+    <app-notification></app-notification>
+  </div>
+  <!-- Form Section -->
+  <form
+    [formGroup]="customerForm"
+    (ngSubmit)="addCustomer()"
+    class="px-8 py-4 space-y-6"
+  >
+    <!-- Name Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- prénoms -->
+      <div>
+        <label
+          for="firstName"
+          class="block text-sm font-medium text-gray-700 mb-3"
+        >
+          Prénoms
+        </label>
+        <div>
+          <input
+            name="firstName"
+            formControlName="firstName"
+            type="text"
+            placeholder="Entrez le ou les prénoms"
+            [ngClass]="{
+              'border-red-400':
+                customerForm.get('firstName')?.invalid &&
+                customerForm.get('firstName')?.touched
+            }"
+            class="w-full px-4 py-3 border border-red-50 rounded-lg bg-gray-100 focus:bg-white text-gray-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
+          />
+          <p
+            *ngIf="
+              customerForm.get('firstName')?.invalid &&
+              customerForm.get('firstName')?.touched
+            "
+            class="text-red-400 text-sm mt-1"
+          >
+            <span *ngIf="customerForm.get('firstName')?.errors?.['required']"
+              >Ce champ est obligatoire.</span
+            >
+          </p>
+        </div>
+      </div>
+
+      <!-- nom -->
+      <div>
+        <label
+          for="lastName"
+          class="block text-sm font-medium text-gray-700 mb-3"
+        >
+          Nom
+        </label>
+        <div>
+          <input
+            name="lastName"
+            formControlName="lastName"
+            type="text"
+            placeholder="Entrez le nom de famille"
+            [ngClass]="{
+              'border-red-400':
+                customerForm.get('lastName')?.invalid &&
+                customerForm.get('lastName')?.touched
+            }"
+            class="w-full px-4 py-3 border border-red-50 rounded-lg bg-gray-100 focus:bg-white text-gray-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
+          />
+          <div
+            *ngIf="
+              customerForm.get('lastName')?.invalid &&
+              customerForm.get('lastName')?.touched
+            "
+            class="text-red-400 text-sm mt-1"
+          >
+            <span *ngIf="customerForm.get('lastName')?.errors?.['required']"
+              >Ce champ est obligatoire</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- numéro -->
+    <div>
+      <label
+        for="phoneNumber"
+        class="block text-sm font-medium text-gray-700 mb-3"
+      >
+        Numéro de Téléphone
+      </label>
+      <div>
+        <input
+          name="phoneNumber"
+          formControlName="phoneNumber"
+          type="text"
+          placeholder="Entrez le numéro de téléphone"
+          [ngClass]="{
+            'border-red-400':
+              customerForm.get('phoneNumber')?.invalid &&
+              customerForm.get('phoneNumber')?.touched
+          }"
+          class="w-full px-4 py-3 border border-red-50 rounded-lg bg-gray-100 focus:bg-white text-gray-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
+        />
+        <p
+          *ngIf="
+            customerForm.get('phoneNumber')?.invalid &&
+            customerForm.get('phoneNumber')?.touched
+          "
+          class="text-red-400 text-sm mt-1"
+        >
+          <span *ngIf="customerForm.get('phoneNumber')?.errors?.['required']"
+            >Ce champ est obligatoire</span
+          >
+          <span *ngIf="customerForm.get('phoneNumber')?.errors?.['pattern']"
+            >Numéro de téléphone invalide</span
+          >
+        </p>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="mt-3">
+      <button
+        type="submit"
+        [disabled]="customerForm.invalid || isLoading"
+        class="w-full flex gap-3 justify-center py-3 px-4 border border-transparent cursor-pointer rounded-lg shadow-sm font-semibold text-white bg-[#008080] disabled:bg-gray-300 disabled:cursor-not-allowed"
+      >
+        <svg
+          *ngIf="!isLoading"
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 mr-2"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+        >
+          <path
+            d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6z"
+          />
+          <path
+            d="M16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"
+          />
+        </svg>
+        <h1 *ngIf="!isLoading">Ajouter le Client</h1>
+        <svg
+          class="animate-spin h-6 w-6 text-[#fff]"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          *ngIf="isLoading"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="5"
+            stroke="currentColor"
+            stroke-width="2"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+      </button>
+    </div>
+  </form>
+</div>
