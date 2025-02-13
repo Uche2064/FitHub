@@ -17,7 +17,7 @@ export class CustomerServiceService {
   public customers$ = this.customersSubject.asObservable();
   public totalPages$ = this.totalPagesSubject.asObservable(); // Expose
 
-  fetchCustomers(page: number = 0, size: number = 5, sort: string = "nom", direction: string = "asc") {
+  fetchCustomers(page: number = 0, size: number = 5, sort: string = "firstName", direction: string = "asc") {
 
     const params = new HttpParams()
       .set('page', page.toString())
@@ -26,7 +26,6 @@ export class CustomerServiceService {
 
     this.http.get<{ content: CustomerDto[], totalPages: number }>(this.apiUrl, { params }).subscribe(
       response => {
-        console.log('Customers fetched:', response.content);
         this.customersSubject.next(response.content);
         this.totalPagesSubject.next(response.totalPages);
       },
@@ -36,14 +35,21 @@ export class CustomerServiceService {
   getCustomers(): Observable<CustomerDto[]> {
     return this.customers$;
   }
+  getAllCustomerWithInactiveSub(): Observable<CustomerDto[]> {
+    return this.http.get<CustomerDto[]>(`${this.apiUrl}/active`);
+  }
+  getTotalCustomers(): Observable<CustomerDto[]> {
+    return this.http.get<CustomerDto[]>(`${this.apiUrl}/`);
+  }
 
   saveCustomer(customer: AddCustomerSchema): Observable<CustomerDto> {
     return this.http.post<CustomerDto>(`${this.apiUrl}`, customer).pipe(tap(() => { this.fetchCustomers(0, 5) }));
   }
 
-  deleteCustomer(id: number): void {
-    this.http.delete(`${this.apiUrl}/${id}`).pipe(tap(() => this.fetchCustomers(0, 5)));
+  deleteCustomer(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(tap(() => this.fetchCustomers(0, 5)));
   }
+
 
   updateCustomer(
     customer: UpdateCustomerSchema,
@@ -52,7 +58,7 @@ export class CustomerServiceService {
     return this.http.put<CustomerDto>(`${this.apiUrl}/${id}`, customer).pipe(tap(() => this.fetchCustomers(0, 5)));
   }
 
-  findCustomerByUsernamr(username: string): Observable<CustomerDto> {
-    return this.http.get<CustomerDto>(`${this.apiUrl}/${username}`);
+  findCustomerByUsernamr(userName: string): Observable<CustomerDto> {
+    return this.http.get<CustomerDto>(`${this.apiUrl}/${userName}`);
   }
 }

@@ -8,9 +8,12 @@ import com.uche.fithub.dto.customer_dto.CustomerDto;
 import com.uche.fithub.dto.customer_dto.UpdateSchema;
 import com.uche.fithub.services.customer_service.CustomerServiceImpl;
 
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -32,11 +35,41 @@ public class CustomerController {
     private CustomerServiceImpl customerService;
 
     @GetMapping
-    public ResponseEntity<?> getCustomers(@PageableDefault(size = 5, sort = "firstName") Pageable pageable) {
+    public ResponseEntity<?> getCustomers(@PageableDefault(size = 5, sort = "registrationDate") Pageable pageable) {
         try {
-            Page<CustomerDto> customers = customerService.getPaginatedCustomers(pageable);            
+            Page<CustomerDto> customers = customerService.getPaginatedCustomers(pageable);
             return new ResponseEntity<>(customers, HttpStatus.OK);
 
+        } catch (JwtException e) {
+            System.err.println("Error getting customers: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> getAllCustomers() {
+        try {
+            List<CustomerDto> customers = customerService.getCustomers();
+            return new ResponseEntity<>(customers, HttpStatus.OK);
+
+        } catch (JwtException e) {
+            System.err.println("Error getting customers: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+        catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/active")
+    public ResponseEntity<?> getAllCustomersByActiveSub() {
+        try {
+            return new ResponseEntity<>(customerService.getCustomersWithInctiveSubscription(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -59,7 +92,11 @@ public class CustomerController {
         try {
             customerService.deleteCustomer(id);
             return new ResponseEntity<>("Client supprimé", HttpStatus.NO_CONTENT);
-        } catch (EntityNotFoundException e) {
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
     }

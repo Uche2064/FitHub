@@ -11,6 +11,7 @@ import com.uche.fithub.dto.pack_dto.PackDto;
 import com.uche.fithub.dto.pack_dto.UpdatePackSchema;
 import com.uche.fithub.entities.Pack;
 import com.uche.fithub.repositories.PackRepository;
+import com.uche.fithub.repositories.SubscriptionRepository;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,6 +22,9 @@ public class PackServiceImpl implements IPackService {
     @Autowired
     private PackRepository packRepository;
 
+    @Autowired
+    SubscriptionRepository subscriptionRepository;
+
     @Override
     public PackDto addPack(AddPackSchema pack) {
         if (packRepository.findByOfferName(pack.getOfferName()).isPresent()) {
@@ -28,7 +32,7 @@ public class PackServiceImpl implements IPackService {
         }
         Pack newPack = new Pack();
         newPack.setMonthlyPrice(pack.getMonthlyPrice());
-        newPack.setOfferName(pack.getOfferName());
+        newPack.setOfferName(pack.getOfferName().toLowerCase());
         newPack.setDurationMonths(pack.getDurationMonths());
         Pack savedPack = packRepository.save(newPack);
         return savedPack.getDto();
@@ -42,8 +46,12 @@ public class PackServiceImpl implements IPackService {
 
     @Override
     public void deletePack(Long packId) {
-        if (packRepository.findById(packId).isEmpty()) {
-            throw new EntityNotFoundException("L'offre avec l'id '" + packId + "' n'existe pas");
+        Pack dbPack = packRepository.findById(packId)
+                .orElseThrow(() -> new EntityNotFoundException("L'offre avec l'id '" + packId + "' n'existe pas"));
+
+        if (!subscriptionRepository.findByPack(dbPack).isEmpty()) {
+            throw new RuntimeException(
+                    "Impossible de supprimer un pack en cours avec des utilisateurs qui y sont encore inscrit");
         }
         packRepository.deleteById(packId);
     }
@@ -55,7 +63,7 @@ public class PackServiceImpl implements IPackService {
                 .orElseThrow(() -> new EntityNotFoundException("L'offre avec l'id '" + packId + "' n'existe pas"));
 
         if (pack.getOfferName() != null && pack.getOfferName().compareToIgnoreCase(dbPack.getOfferName()) == 0) {
-            throw new EntityExistsException("L'offre avec le nom du pack '" + dbPack.getOfferName() + "' existe déjà");
+
         }
         Optional.ofNullable(pack.getOfferName()).ifPresent(dbPack::setOfferName);
         Optional.ofNullable(pack.getDurationMonths()).ifPresent(dbPack::setDurationMonths);

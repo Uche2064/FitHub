@@ -21,7 +21,6 @@ import { AddCustomerSchema } from '../models/AddCustomerSchema';
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    NotificationComponent,
   ],
   templateUrl: './add-customer.component.html',
   styleUrl: './add-customer.component.css',
@@ -57,7 +56,6 @@ export class AddCustomerComponent {
       this.customer = this.customerForm.value;
       this.customerService.saveCustomer(this.customer).subscribe(
         (customer) => {
-
           console.log(customer);
           this.notificaiton.notify(
             new CustomMessage('Client ajouté avec succès!', 'success')
@@ -67,8 +65,14 @@ export class AddCustomerComponent {
           this.customerForm.reset();
         },
         (error: HttpErrorResponse) => {
-          console.log(error);
-          this.notificaiton.notify(new CustomMessage(error.error, 'error'));
+          console.log(typeof error.error);
+          if (typeof error.error === 'object') {
+            this.notificaiton.notify(new CustomMessage('Erreur lors de l\'ajout. Veuillez réessayer plus tard', 'error'));
+            return;
+          } else {
+            this.notificaiton.notify(new CustomMessage(error.error, 'error'));
+
+          }
           this.isLoading = false;
         }
       );

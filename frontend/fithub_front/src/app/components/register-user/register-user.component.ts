@@ -15,6 +15,8 @@ import {
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AddUserSchema } from './models/AddUserSchema';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-register-user',
@@ -25,6 +27,7 @@ import { AddUserSchema } from './models/AddUserSchema';
     NotificationComponent,
     RouterLink,
     ReactiveFormsModule,
+    FontAwesomeModule
   ],
   templateUrl: './register-user.component.html',
   styleUrl: './register-user.component.css',
@@ -35,6 +38,11 @@ export class RegisterUserComponent {
   user: AddUserSchema = new AddUserSchema('', '', '', '', '');
   isLoading: boolean = false;
   showPassword: boolean = false;
+  errors: [] = [];
+  loginCredentials: LoginSchema = new LoginSchema('', '');
+  isDarkMode = false;
+  faMoon = faMoon;
+  faSun = faSun;
 
   constructor(
     private fb: FormBuilder,
@@ -44,12 +52,11 @@ export class RegisterUserComponent {
   ) {
     this.userForm = this.fb.group({
       fullName: ['', [Validators.required, Validators.minLength(2)]],
-      username: ['', [Validators.required, Validators.minLength(2)]],
       phoneNumber: [
         '',
-        [Validators.required, Validators.pattern('^[0-9]{8,15}$')],
+        [Validators.required, Validators.pattern('^[0-9]{8}$')],
       ],
-      userName: ['', [Validators.required, Validators.minLength(4)]],
+      userName: ['', [Validators.required, Validators.minLength(2)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       email: ['', [Validators.required, Validators.email]],
     });
@@ -57,9 +64,35 @@ export class RegisterUserComponent {
 
   addUser() {
     this.isLoading = true;
+    console.log(this.userForm.value);
+    if (this.userForm.valid) {
+      this.user = this.userForm.value;
+      this.loginCredentials = new LoginSchema(this.user.userName, this.user.password);
+      console.log("Login: " + this.loginCredentials.userName + " " + this.loginCredentials.password);
+      this.authService.saveUser(this.user).subscribe((newUser) => {
+        if (newUser) {
+          this.isLoading = false;
+          this.notificationService.notify(new CustomMessage('Utilisateur crée avec succès.', 'success'));
+          this.route.navigate(['/login']);
+        }
+      }, (error: HttpErrorResponse) => {
+        console.log(error);
+        this.isLoading = false
+        this.notificationService.notify(new CustomMessage(error.error, 'error'))
+      })
+    }
   }
+
 
   tooglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
+
+
+  toggleDarkMode() {
+    this.isDarkMode = !JSON.parse(localStorage.getItem('isDarkMode')!);
+    localStorage.setItem('isDarkMode', JSON.stringify(this.isDarkMode));
+    document.body.classList.toggle('dark', this.isDarkMode);
+  }
+
 }

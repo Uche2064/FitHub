@@ -2,17 +2,14 @@ export class UpdateCustomerSchema {
   firstName: string;
   lastName: string;
   phoneNumber: string;
-  username: string;
 
   constructor(
-      firstName: string,
-      lastName: string,
-      phoneNumber: string,
-      username: string
+    firstName: string,
+    lastName: string,
+    phoneNumber: string,
   ) {
-      this.firstName = firstName;
-      this.lastName = lastName;
-      this.phoneNumber = phoneNumber;
-      this.username = username;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.phoneNumber = phoneNumber;
   }
 }

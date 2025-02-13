@@ -1,162 +1,176 @@
+<fa-icon
+  (click)="toggleDarkMode()"
+  [icon]="isDarkMode ? faMoon : faSun"
+  class="text-black dark:text-white text-3xl absolute z-50 top-16 right-20 cursor-pointer"
+></fa-icon>
 <div
-  class="min-h-screen bg-gradient-to-br from-[#cfcfcf] to-[#008080] flex items-center justify-center px-4"
+  class="min-h-screen dark:bg-gradient-to-b dark:from-slate-700 dark:to-slate-950 bg-gradient-to-br from-[#cfcfcf] to-[#008080] flex items-center justify-center px-4"
 >
-  <div class="bg-white shadow-xl rounded-2xl w-full max-w-md overflow-hidden">
-    <div class="px-8 py-10">
-      <div class="text-center mb-8">
-        <h2 class="text-3xl font-extrabold text-gray-900">Bienvenue</h2>
-        <p class="text-gray-600 mt-2">Connectez-vous à votre compte</p>
-      </div>
-      <app-notification></app-notification>
-      <form (ngSubmit)="onSubmit()" class="space-y-6" [formGroup]="loginForm">
-        <div>
-          <input
-            name="username"
-            formControlName="username"
-            type="text"
-            placeholder="Nom d'utilisateur"
-            [ngClass]="{
-              'border-red-400':
-                loginForm.get('username')?.invalid &&
-                loginForm.get('username')?.touched
-            }"
-            class="w-full px-4 py-3 border border-red-50 rounded-lg bg-gray-100 focus:bg-white text-gray-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
-          />
-          <p
-            *ngIf="
-              loginForm.get('username')?.invalid &&
-              loginForm.get('username')?.touched
-            "
-            class="text-red-400 text-sm mt-1"
-          >
-            <span *ngIf="loginForm.get('username')?.errors?.['required']"
-              >Le nom d'utilisateur est obligatoire.</span
-            >
-            <span *ngIf="loginForm.get('username')?.errors?.['minlength']"
-              >Le nom d'utilisateur doit contenir au moins 5 caractères.</span
-            >
-          </p>
-        </div>
+<div
+class="bg-white dark:bg-slate-900 shadow-xl rounded-2xl mx-auto max-w-3xl overflow-hidden"
+>
+<div class="px-8 py-10">
+  <div class="text-center mb-8">
+    <h2 class="text-3xl font-extrabold dark:text-white text-slate-950">
+      Bienvenue
+    </h2>
+    <p class="text-gray-600 dark:text-slate-4 00 mt-2">
+      Connectez-vous à votre compte
+    </p>
+  </div>
+  <app-notification></app-notification>
+  <form
+    (ngSubmit)="onSubmit()"
+    class="space-y-6 w-md max-w-sm"
+    [formGroup]="loginForm"
+  >
+    <div>
+      <input
+        name="userName"
+        formControlName="userName"
+        type="text"
+        placeholder="Nom d'utilisateur"
+        [ngClass]="{
+          'border-red-400':
+            loginForm.get('userName')?.invalid &&
+            loginForm.get('userName')?.touched
+        }"
+        class="w-full px-4 dark:placeholder:text-slate-500 dark:text-slate-100 py-3 border border-gray-50 dark:border-slate-700 rounded-lg bg-gray-100 dark:bg-slate-900 dark:focus:bg-slate-700 dark:focus:border-teal-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
+      />
+      <p
+        *ngIf="
+          loginForm.get('userName')?.invalid &&
+          loginForm.get('userName')?.touched
+        "
+        class="text-red-400 text-sm mt-1"
+      >
+        <span *ngIf="loginForm.get('userName')?.errors?.['required']"
+          >Le nom d'utilisateur est obligatoire.</span
+        >
+        <span *ngIf="loginForm.get('userName')?.errors?.['minlength']"
+          >Le nom d'utilisateur doit contenir au moins 5 caractères.</span
+        >
+      </p>
+    </div>
 
-        <div>
-          <div class="flex items-center">
-            <input
-              name="password"
-              formControlName="password"
-              [ngClass]="{
-                'border-red-400':
-                  loginForm.get('password')?.invalid &&
-                  loginForm.get('password')?.touched
-              }"
-
-              [type]="showPassword ? 'text' : 'password'"
-              placeholder="Password"
-              class="w-full px-4 py-3 border border-red-50 rounded-l-lg bg-gray-100 focus:bg-white text-gray-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
-            />
-
-            <button
-              class="bg-gray-100 px-4 py-3 rounded-r-lg"
-              (click)="tooglePasswordVisibility()"
-              type="button"
-            >
-              <svg
-                *ngIf="showPassword"
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-black-200 cursor-pointer"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                />
-              </svg>
-
-              <!-- Eye Closed Icon -->
-              <svg
-                *ngIf="!showPassword"
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6 text-black-200 cursor-pointer"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.87 9.87 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                />
-              </svg>
-            </button>
-          </div>
-          <p
-            *ngIf="
+    <div>
+      <div class="flex items-center">
+        <input
+          name="password"
+          formControlName="password"
+          [ngClass]="{
+            'border-red-400':
               loginForm.get('password')?.invalid &&
               loginForm.get('password')?.touched
-            "
-            class="text-red-400 text-sm mt-1"
-          >
-            <span *ngIf="loginForm.get('password')?.errors?.['required']"
-              >Le mot de passe est obligatoire.</span
-            >
-            <span *ngIf="loginForm.get('password')?.errors?.['minlength']"
-              >Le mot de passe doit contenir au moins 8 caractères.</span
-            >
-          </p>
-        </div>
-        <!-- submit button -->
-        <div>
-          <button
-            type="submit"
-            [disabled]="loginForm.invalid || isLoading"
-            class="w-full flex gap-3 justify-center py-3 px-4 border border-transparent cursor-pointer rounded-lg shadow-lg font-semibold text-white bg-[#008080] transition-transform duration-300 hover:scale-105 disabled:bg-gray-400 disabled:cursor-not-allowed"
-          >
-            <svg
-              class="animate-spin h-6 w-6 text-[#fff]"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              *ngIf="isLoading"
-            >
-              <circle
-                cx="12"
-                cy="12"
-                r="5"
-                stroke="currentColor"
-                stroke-width="2"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+          }"
+          [type]="showPassword ? 'text' : 'password'"
+          placeholder="Password"
+          class="w-full px-4 py-3 dark:placeholder:text-slate-500 dark:text-slate-100 border border-gray-50 dark:border-slate-700 rounded-tl-lg rounded-bl-lg bg-gray-100 dark:bg-slate-900 dark:focus:bg-slate-700 dark:focus:border-teal-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
+        />
 
-            <span>{{
-              isLoading ? "Connexion en cours" : "Connectez-vous"
-            }}</span>
-          </button>
-        </div>
-        <div class="flex items-center justify-center space-x-2 mt-5">
-          <p>Pas encore de compte?</p>
-          <a
-            href="#"
-            class="text-blue-500 hover:text-blue-700"
-            routerLink="/register"
-            >Inscrivez-vous</a
+        <button
+          class="bg-gray-100 dark:bg-slate-800 px-4 py-3 rounded-r-lg"
+          (click)="tooglePasswordVisibility()"
+          type="button"
+        >
+          <svg
+            *ngIf="showPassword"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 dark:text-white text-black-200 cursor-pointer"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-        </div>
-      </form>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+            />
+          </svg>
+
+          <!-- Eye Closed Icon -->
+          <svg
+            *ngIf="!showPassword"
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 dark:text-white text-black-200 cursor-pointer"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.87 9.87 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+            />
+          </svg>
+        </button>
+      </div>
+      <p
+        *ngIf="
+          loginForm.get('password')?.invalid &&
+          loginForm.get('password')?.touched
+        "
+        class="text-red-400 text-sm mt-1"
+      >
+        <span *ngIf="loginForm.get('password')?.errors?.['required']"
+          >Le mot de passe est obligatoire.</span
+        >
+        <span *ngIf="loginForm.get('password')?.errors?.['minlength']"
+          >Le mot de passe doit contenir au moins 8 caractères.</span
+        >
+      </p>
     </div>
-  </div>
+    <!-- submit button -->
+    <div>
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid || isLoading"
+        class="bg-teal-600 text-white px-4 py-2 rounded-md shadow-sm w-full duration-300 transition-all cursor-pointer disabled:cursor-not-allowed disabled:bg-gray-400 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 text-center flex justify-center"
+      >
+        <svg
+          class="animate-spin h-6 w-6 text-[#fff] flex justify-center"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          *ngIf="isLoading"
+        >
+          <circle
+            cx="12"
+            cy="12"
+            r="5"
+            stroke="currentColor"
+            stroke-width="2"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          ></path>
+        </svg>
+
+        <span *ngIf="!isLoading"> Connectez-vous </span>
+      </button>
+    </div>
+    <div class="flex items-center justify-center space-x-2 mt-5">
+      <p class="dark:text-slate-400">Pas encore de compte?</p>
+      <p
+        class="text-blue-500 hover:text-blue-700 cursor-pointer"
+        [routerLink]="['/register']"
+      >
+        Inscrivez-vous
+      </p>
+    </div>
+  </form>
+</div>
+</div>
+
+
 </div>

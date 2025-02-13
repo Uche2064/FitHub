@@ -33,10 +33,10 @@ public class JwtUtils {
         return createToken(claims, user.getUsername());
     }
 
-    public String generateTokenFromUsername(String username) {
+    public String generateTokenFromUsername(String userName) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", "ROLE_USER");
-        return createToken(claims, username);
+        return createToken(claims, userName);
     }
 
     @SuppressWarnings("deprecation")
@@ -58,10 +58,10 @@ public class JwtUtils {
 
     public Boolean validateToken(String token, UserDetails userDetails) {
 
-        String username = extractUsername(token);
+        String userName = extractUsername(token);
         System.out
-                .println("validating token: " + (username.equals(userDetails.getUsername()) && !isTokenExpired(token)));
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+                .println("validating token: " + (userName.equals(userDetails.getUsername()) && !isTokenExpired(token)));
+        return (userName.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public String extractUsername(String token) {

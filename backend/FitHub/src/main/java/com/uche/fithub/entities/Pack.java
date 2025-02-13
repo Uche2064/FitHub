@@ -48,6 +48,7 @@ public class Pack {
         packDto.setOfferName(this.offerName);
         packDto.setDurationMonths(this.durationMonths);
         packDto.setMonthlyPrice(this.monthlyPrice);
+        packDto.setAddedAt(this.addedAt);
         return packDto;
     }
 }

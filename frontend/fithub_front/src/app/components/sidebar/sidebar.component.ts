@@ -13,21 +13,32 @@ import {
   faDashboard,
   faGear,
   faGrip,
+  faMoon,
   faPerson,
+  faSun,
   faTh,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-sidebar',
-  imports: [FontAwesomeModule, CommonModule],
+  imports: [FontAwesomeModule, CommonModule, RouterModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css',
 })
 export class SidebarComponent {
-  views = Views; // Rendre l'enum accessible dans le template
+  isDarkMode = false;
+
+  toggleDarkMode() {
+    this.isDarkMode = !JSON.parse(localStorage.getItem('isDarkMode')!);
+    localStorage.setItem('isDarkMode', JSON.stringify(this.isDarkMode));
+    document.body.classList.toggle('dark', this.isDarkMode);
+  }
+  views = Views;
   logo: string = 'FH.png';
-  faHome = faArrowLeft;
+  faMoon = faMoon;
+  faSun = faSun;
   faClient = faUser;
   faArrowDown = faCaretRight;
   faDashboard = faGrip;
@@ -35,9 +46,10 @@ export class SidebarComponent {
   faBell = faBell;
   faParametre = faGear;
   selectedMenu: string | null = null;
-  constructor(private shareStateService: SharedViewService) {} // Instancier le services
+  constructor(private shareStateService: SharedViewService) { }
 
   activateTab: number = 0;
+
 
   changeView(view: Views): void {
     this.shareStateService.changeView(view);

@@ -7,5 +7,5 @@ public class UpdateSchema {
     String firstName;
     String lastName;
     String phoneNumber;
-    String username;
+    String userName;
 }

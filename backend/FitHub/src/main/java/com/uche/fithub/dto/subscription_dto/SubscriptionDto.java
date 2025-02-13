@@ -15,5 +15,6 @@ public class SubscriptionDto {
     private PackDto pack;
 
     private LocalDate startDate;
+    private LocalDate endDate;
     private boolean active;
 }

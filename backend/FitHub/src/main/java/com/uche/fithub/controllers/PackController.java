@@ -29,12 +29,12 @@ public class PackController {
     @Autowired
     private PackServiceImpl packService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> getPacks() {
         return new ResponseEntity<>(packService.getPacks(), HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<?> savePack(@RequestBody @Valid AddPackSchema pack) {
         try {
             PackDto newPack = packService.addPack(pack);
@@ -54,8 +54,11 @@ public class PackController {
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (SqlScriptException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

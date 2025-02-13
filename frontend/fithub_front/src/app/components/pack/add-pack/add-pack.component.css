@@ -1,0 +1,41 @@
+/* input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+.number-input-wrapper {
+  position: relative;
+}
+
+.number-controls {
+  position: absolute;
+  right: 0;
+  top: 1px;
+  bottom: 1px;
+  display: flex;
+  flex-direction: column;
+  width: 20px;
+  border-left: 1px solid #e5e7eb;
+}
+
+.number-control-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9fafb;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.number-control-btn:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+
+.number-control-btn:first-child {
+  border-bottom: 1px solid #e5e7eb;
+} */

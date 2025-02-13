@@ -2,8 +2,10 @@ package com.uche.fithub.services.subscription_service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ import com.uche.fithub.repositories.SubscriptionRepository;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class SubscriptionService implements ISubscriptionService {
@@ -29,29 +33,43 @@ public class SubscriptionService implements ISubscriptionService {
     @Autowired
     PackRepository packRepository;
 
+
+
+    @Override
+    public Page<SubscriptionDto> getPaginatedSubscription(Pageable pageable) {
+        return subscriptionRepository.findAll(pageable).map(Subscription::getDto);
+    }
+
+
     @Scheduled(cron = "0 0 0 * * ?")
+    @Transactional
     public void checkSubscriptions() {
         List<Subscription> subscriptions = subscriptionRepository.findAllByActiveTrue();
-        for (Subscription sub : subscriptions) {
-            if (sub.getEndDate().isBefore(LocalDate.now()) || sub.getEndDate().isEqual(LocalDate.now())) {
-                sub.setActive(false);
-                subscriptionRepository.save(sub);
-            }
+
+        // Collect subscriptions to deactivate
+        List<Subscription> expiredSubscriptions = subscriptions.stream()
+            .filter(sub -> !sub.getEndDate().isAfter(LocalDate.now()))
+            .collect(Collectors.toList());
+
+        // Deactivate subscriptions and save
+        for (Subscription sub : expiredSubscriptions) {
+            sub.setActive(false);
         }
+
+        // Save all changes in bulk
+        subscriptionRepository.saveAll(expiredSubscriptions);
     }
 
     @Override
     public SubscriptionDto subscribeCustomerToPack(AddCustomerToPackSchema sub) {
-        // find customer
         Customer customer = customerRepository.findById(sub.getCustomerId())
                 .orElseThrow(() -> new EntityNotFoundException("Le client n'est pas enregistré"));
-        // find pack
         Pack pack = packRepository.findById(sub.getPackId())
                 .orElseThrow(() -> new EntityNotFoundException("Le pack n'est pas enregistré"));
 
-        // check if customer is already subscribed to a pack
         if (customer.isActiveSubscription()) {
-            throw new EntityExistsException("L'abonné '" + customer.getFirstName() + ' ' + customer.getLastName() + "' est déjà souscrit à un pack");
+            throw new EntityExistsException("L'abonné '" + customer.getFirstName() + ' ' + customer.getLastName()
+                    + "' est déjà souscrit à un pack");
         }
 
         // create new sub
@@ -70,23 +88,14 @@ public class SubscriptionService implements ISubscriptionService {
     }
 
     @Override
-    public SubscriptionDto getCustomerWithActiveSubscription(Long customerId) {
-        return subscriptionRepository.findByCustomerId(customerId).orElseThrow(
-                () -> new EntityNotFoundException("Le client avec l'id '" + customerId + "' n'est pas enregistré"))
-                .getDto();
-    }
-
-    @Override
     public void cancelSubscription(Long subscriptionId) {
         Subscription subscription = subscriptionRepository.findById(subscriptionId)
                 .orElseThrow(() -> new RuntimeException("Subscription not found"));
 
-        // Update the customer's active subscription status
         Customer customer = subscription.getCustomer();
         customer.setActiveSubscription(false);
         customerRepository.save(customer);
 
-        // Delete the subscription
         subscriptionRepository.delete(subscription);
     }
 
@@ -94,5 +103,7 @@ public class SubscriptionService implements ISubscriptionService {
     public List<SubscriptionDto> getSubscriptions() {
         return subscriptionRepository.findAll().stream().map(Subscription::getDto).toList();
     }
+
+
 
 }

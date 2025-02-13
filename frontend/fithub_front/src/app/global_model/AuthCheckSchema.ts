@@ -1,8 +1,8 @@
 export class AuthCheckSchema {
-  username!: string;
+  userName!: string;
   token!: string;
-  constructor(username: string, token: string) {
-    this.username = username;
+  constructor(userName: string, token: string) {
+    this.userName = userName;
     this.token = token;
   }
 }

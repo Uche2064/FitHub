@@ -38,16 +38,16 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             final String authHeader = request.getHeader("Authorization");
 
-            String username = null;
+            String userName = null;
             String jwt = null;
 
             if (!Objects.isNull(authHeader) && authHeader.startsWith("Bearer ")) {
                 jwt = authHeader.substring(7);
-                username = jwtUtils.extractUsername(jwt);
+                userName = jwtUtils.extractUsername(jwt);
             }
 
-            if (!Objects.isNull(username) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
-                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+            if (!Objects.isNull(userName) && Objects.isNull(SecurityContextHolder.getContext().getAuthentication())) {
+                UserDetails userDetails = customUserDetailsService.loadUserByUsername(userName);
                 if (jwtUtils.validateToken(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
                             null, userDetails.getAuthorities());
@@ -58,6 +58,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (ServletException e) {
+            System.err.println("FilterChain error: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         } catch (IOException e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal Server Error");

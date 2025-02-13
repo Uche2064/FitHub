@@ -1,5 +1,7 @@
 package com.uche.fithub.dto.pack_dto;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
@@ -10,5 +12,6 @@ public class PackDto {
     private int durationMonths;
 
     private double monthlyPrice;
+    private LocalDateTime addedAt;
     
 }

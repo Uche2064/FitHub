@@ -6,25 +6,26 @@ import { CommonModule } from '@angular/common';
 import { SharedViewService } from '../../services/shared_view/shared-view.service';
 import { Views } from '../../utils/view.enum';
 import { CustomerComponent } from '../customer/customer.component';
+import { PackComponent } from '../pack/pack.component';
+import { SubscriptionComponent } from "../subscription/subscription.component";
+import { RouterOutlet } from '@angular/router';
+import { NotificationComponent } from "../../utils/notification/notification.component";
 @Component({
   selector: 'app-homepage',
   imports: [
     SidebarComponent,
     NavbarComponent,
-    DashboardComponent,
     CommonModule,
-    CustomerComponent,
-  ],
+    RouterOutlet,
+    NotificationComponent
+],
   templateUrl: './homepage.component.html',
   styleUrl: './homepage.component.css',
 })
 export class HomepageComponent implements OnInit {
-  currentView: Views = Views.DASHBOARD;
   views = Views;
-  constructor(private shareViewService: SharedViewService) {}
+  constructor(private shareViewService: SharedViewService) { }
   ngOnInit(): void {
-    this.shareViewService.viewObservable$.subscribe((view: Views) => {
-      this.currentView = view;
-    });
+
   }
 }

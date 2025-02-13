@@ -16,8 +16,8 @@ public class AddUserSchema {
     @NotBlank(message = "Champ obligatoire")
     private String fullName;
     @NotNull(message = "Champ obligatoire")
-    @Size(min = 5, message = "Le nom d'utilisateur doit contenir au moins 5 caractères")
-    private String username;
+    @Size(min = 2, message = "Le nom d'utilisateur doit contenir au moins 5 caractères")
+    private String userName;
     @NotNull(message = "Champ obligatoire")
     @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
     private String password;

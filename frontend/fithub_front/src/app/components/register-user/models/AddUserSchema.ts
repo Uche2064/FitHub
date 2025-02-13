@@ -5,7 +5,7 @@ export class AddUserSchema {
 
   fullName: string = '';
 
-  username: string = '';
+  userName: string = '';
 
   password: string = '';
 
@@ -13,13 +13,15 @@ export class AddUserSchema {
     email: string,
     phoneNumber: string,
     fullName: string,
-    username: string,
+    userName: string,
     password: string
   ) {
     this.email = email;
     this.phoneNumber = phoneNumber;
     this.fullName = fullName;
-    this.username = username;
+    this.userName = userName;
     this.password = password;
   }
+
+
 }

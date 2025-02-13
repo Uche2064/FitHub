@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class AuthSchema {
     @NotBlank(message = "Username required")
-    private String username;
+    private String userName;
 
     @NotBlank(message = "Token required")
     private String token;

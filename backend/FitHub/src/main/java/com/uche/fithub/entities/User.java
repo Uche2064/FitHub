@@ -34,7 +34,7 @@ public class User {
     private String fullName;
 
     @Column(unique = true)
-    private String username;
+    private String userName;
 
     private String password;
 
@@ -58,7 +58,7 @@ public class User {
     public UserDto getDto() {
         UserDto dto = new UserDto();
         dto.setId(this.id);
-        dto.setUsername(this.username);
+        dto.setUserName(this.userName);
         dto.setEmail(this.email);
         dto.setFullName(this.fullName);
         dto.setCreatedAt(this.addedAt);

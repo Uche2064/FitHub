@@ -1,16 +1,11 @@
-<section class="flex h-screen">
-  <app-sidebar class="fixed"></app-sidebar>
+<section class="flex h-screen dark:bg-slate-950 dark:text-white">
+  <app-notification ></app-notification>
+
+  <app-sidebar class="fixed "></app-sidebar>
   <div class="flex flex-1 flex-col ml-80">
     <app-navbar></app-navbar>
-    <div class="mt-16 flex-1 overflow-y-auto">
-      <div [ngSwitch]="currentView" class="bg-white px-4 py-3 max-h-min">
-        <div *ngSwitchCase="views.DASHBOARD">
-          <app-dashboard></app-dashboard>
-        </div>
-        <div *ngSwitchCase="views.CLIENT">
-          <app-customer></app-customer>
-        </div>
-      </div>
+    <div class="px-6 py-6 flex-1 mt-15 dark:bg-slate-950">
+      <router-outlet class="dark:bg-slate-950"></router-outlet>
     </div>
   </div>
 </section>

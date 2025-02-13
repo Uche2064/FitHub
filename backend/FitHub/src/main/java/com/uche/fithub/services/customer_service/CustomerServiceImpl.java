@@ -2,13 +2,11 @@ package com.uche.fithub.services.customer_service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.uche.fithub.dto.customer_dto.CustomerDto;
@@ -48,14 +46,10 @@ public class CustomerServiceImpl implements ICustomerService {
     }
 
     @Override
-    public void login(String email, String password) {
-        throw new UnsupportedOperationException("Unimplemented method 'login'");
-    }
-
-    @Override
     public CustomerDto updateCustomerInfo(UpdateSchema customer, Long id) {
         Customer dbCustomer = customerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Le client n'est pas enregisté"));
+                System.out.println(dbCustomer);
 
         Optional.ofNullable(customer.getFirstName()).ifPresent(dbCustomer::setFirstName);
         Optional.ofNullable(customer.getLastName()).ifPresent(dbCustomer::setLastName);
@@ -67,22 +61,14 @@ public class CustomerServiceImpl implements ICustomerService {
 
     @Override
     public void deleteCustomer(Long id) {
-        if (customerRepository.findById(id).isEmpty()) {
-            throw new EntityNotFoundException("Le client n'est pas enregistrer");
+        Customer dbCustomer = customerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Le client n'est pas enregistrer"));
+
+        if (dbCustomer.isActiveSubscription()) {
+            throw new IllegalStateException("Impossible de supprimer un client avec une souscription active");
         }
+
         customerRepository.deleteById(id);
-    }
-
-    @Override
-    public void changePassword(String email, String password) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
-    }
-
-    @Override
-    public void logout() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'logout'");
     }
 
     @Override
@@ -95,6 +81,13 @@ public class CustomerServiceImpl implements ICustomerService {
     public CustomerDto findCustomerById(Long id) {
         return customerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Le client n'est pas trouvé")).getDto();
+    }
+
+    @Override
+    public List<CustomerDto> getCustomersWithInctiveSubscription() {
+        List<Customer> customers = customerRepository.findAllByInactiveSubscription();
+
+        return customers.stream().map(Customer::getDto).collect(Collectors.toList());
     }
 
 }

@@ -9,14 +9,20 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { SharedService } from '../../services/shared_service/shared.service';
 import { AuthService } from '../../services/auth_service/auth.service';
+import { UsersInfoComponent } from "../users-info/users-info.component";
+import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, UsersInfoComponent, CommonModule, ReactiveFormsModule],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
+
+  toogleUserInfoTab: boolean = false;
+
   faPerson = faUser;
   faArrowDown = faCaretDown;
   today: number = Date.now();
@@ -39,6 +45,11 @@ export class NavbarComponent {
   logout() {
     this.authService.logout();
   }
+
+  viewUserInfo() {
+    console.log(localStorage.getItem('currentUser'));
+  }
+
   toggleUserOption() {
     this.isHidden = !this.isHidden;
   }

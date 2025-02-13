@@ -41,12 +41,12 @@ public class AuthService implements IAuthService {
 
     @Override
     public JwtResponse loginUser(LoginUserSchema user) {
-        User dbUser = userRepository.findByUsername(user.getUsername());
-        if(Objects.isNull(dbUser)) {
+        User dbUser = userRepository.findByUserName(user.getUserName());
+        if (Objects.isNull(dbUser)) {
             throw new EntityNotFoundException("Utilisateur non trouvé");
         }
         Authentication auth = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(), user.getPassword()));
 
         if (auth.isAuthenticated()) {
             JwtResponse jwtResponse = new JwtResponse();
@@ -56,9 +56,10 @@ public class AuthService implements IAuthService {
             String jwt = jwtUtils.generateToken(userDetails);
             jwtResponse.setAccessToken(jwt);
             jwtResponse.setRefreshToken(refreshToken.getToken());
-            jwtResponse.setUsername(user.getUsername());
+            jwtResponse.setUserName(user.getUserName());
             jwtResponse.setUserId(refreshToken.getUser().getId());
 
+            System.out.println("Jwt response: " + jwtResponse);
 
             return jwtResponse;
         } else {
@@ -78,7 +79,7 @@ public class AuthService implements IAuthService {
 
     @Override
     public boolean isAuthenticated(AuthSchema schema) {
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(schema.getUsername());
+        UserDetails userDetails = customUserDetailsService.loadUserByUsername(schema.getUserName());
         if (jwtUtils.validateToken(schema.getToken(), userDetails)) {
             return true;
         } else {

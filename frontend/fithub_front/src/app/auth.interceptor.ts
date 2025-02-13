@@ -1,6 +1,6 @@
-import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpEvent, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, filter, switchMap, take, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, filter, switchMap, take, throwError } from 'rxjs';
 import { AuthService } from './services/auth_service/auth.service';
 
 const isRefreshing = { value: false };
@@ -11,15 +11,15 @@ export const authInterceptor: HttpInterceptorFn = (
   next: HttpHandlerFn
 ): Observable<HttpEvent<any>> => {
   const authService = inject(AuthService);
-  const excludedUrls = ['/login', '/register'];
 
+  const excludedUrls = ['/login', '/register', '/refresh'];
   const isExcluded = excludedUrls.some(url => request.url.includes(url));
 
   if (isExcluded) {
     return next(request);
   }
-
-
+  const headers: HttpHeaders = new HttpHeaders(
+  );
   const addToken = (request: HttpRequest<any>, token: string) => {
     return request.clone({
       setHeaders: {
@@ -34,15 +34,25 @@ export const authInterceptor: HttpInterceptorFn = (
       refreshTokenSubject.next(null);
 
       return authService.refreshToken().pipe(
-        tap((token) => {
+
+        switchMap((response) => {
+          console.log("refreshing token: ", response)
           isRefreshing.value = false;
-          refreshTokenSubject.next(token.accessToken);
+          refreshTokenSubject.next(response.accessToken);
+
+          const newRequest = request.clone({
+            setHeaders: {
+              Authorization: `Bearer ${response.accessToken}`
+            }
+          });
+
+          return next(newRequest);
         }),
-        switchMap((token) => next(addToken(request, token.accessToken))),
         catchError((error) => {
           isRefreshing.value = false;
+          refreshTokenSubject.next(null);
           authService.logout();
-          return throwError(() => error);
+          return throwError(() => new Error('Token refresh failed'));
         })
       );
     }
@@ -50,14 +60,20 @@ export const authInterceptor: HttpInterceptorFn = (
     return refreshTokenSubject.pipe(
       filter((token): token is string => token !== null),
       take(1),
-      switchMap(token => next(addToken(request, token)))
+      switchMap(token => {
+        const newRequest = request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        return next(newRequest);
+      })
     );
   };
 
-  const token = localStorage.getItem('access_token');
-
-  if (token) {
-    request = addToken(request, token);
+  const accessToken = localStorage.getItem('access_token');
+  if (accessToken) {
+    request = addToken(request, accessToken);
   }
 
   return next(request).pipe(

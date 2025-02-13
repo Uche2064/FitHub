@@ -1,8 +1,12 @@
 <div
   *ngIf="message.content != null"
   class="{{
-    message.type == 'success' ? 'bg-green-400' : 'bg-red-400'
-  }} mb-5 px-4 py-3 rounded-lg"
+    message.type == 'success'
+      ? 'bg-green-400'
+      : message.type == 'info'
+      ? 'bg-blue-400'
+      : 'bg-red-400'
+  }} mb-5 px-4 py-3 rounded-lg absolute z-500 right-5 top-16"
 >
   <span class="text-white font-medium">
     {{ message.content }}

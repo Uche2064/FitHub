@@ -2,7 +2,6 @@ package com.uche.fithub.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,7 +35,6 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtils jwtUtils;
-    private final String authBase = "/api/v1/auth/*";
 
     @Bean
     public SecurityFilterChain securityInterceptor(HttpSecurity httpSecurity)
@@ -57,7 +55,7 @@ public class SecurityConfig {
                         UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults())
                 .build();
-    }
+    }   
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

@@ -1,8 +1,5 @@
 package com.uche.fithub.controllers;
 
-import java.sql.SQLException;
-
-import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.uche.fithub.dto.auth_dto.AuthSchema;
 import com.uche.fithub.dto.auth_dto.LoginUserSchema;
-import com.uche.fithub.dto.auth_dto.TokenRefreshRequestSchema;
 import com.uche.fithub.services.auth.AuthService;
 import com.uche.fithub.services.refresh_token_service.RefreshTokenService;
 import com.uche.fithub.utils.JwtResponse;
@@ -40,12 +35,12 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginUserSchema user) {
         try {
+            System.out.println("login user: " + user.toString());
             JwtResponse authData = authService.loginUser(user);
             return new ResponseEntity<>(authData, HttpStatus.OK);
         } catch (EntityNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-        catch (RuntimeException e) {
+        } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,11 +57,10 @@ public class AuthController {
         }
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequestSchema request) {
+    @GetMapping("/refresh/{refreshTokenUUID}")
+    public ResponseEntity<?> refreshToken(@PathVariable String refreshTokenUUID) {
         try {
-            String refreshToken = request.getRefreshToken();
-            TokenRefreshResponse refreshTokenResponse = refreshTokenService.refreshToken(refreshToken);
+            TokenRefreshResponse refreshTokenResponse = refreshTokenService.refreshToken(refreshTokenUUID);
             return new ResponseEntity<>(refreshTokenResponse, HttpStatus.ACCEPTED);
 
         } catch (EntityNotFoundException e) {
@@ -75,16 +69,6 @@ public class AuthController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.UNAUTHORIZED);
         }
 
-    }
-
-    @PostMapping("/check")
-    public ResponseEntity<?> checkUserLoggedIn(@Valid @RequestBody AuthSchema schema) {
-        try {
-            authService.isAuthenticated(schema);
-            return new ResponseEntity<>(true, HttpStatus.ACCEPTED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
 }

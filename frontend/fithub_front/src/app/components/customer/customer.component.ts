@@ -15,6 +15,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CustomerListComponent } from './customer-list/customer-list.component';
 import { AddCustomerComponent } from './add-customer/add-customer.component';
 import { trigger, transition, style, animate, state } from '@angular/animations';
+import { NotificationComponent } from "../../utils/notification/notification.component";
 
 @Component({
   selector: 'app-customer',
@@ -24,8 +25,8 @@ import { trigger, transition, style, animate, state } from '@angular/animations'
     ReactiveFormsModule,
     AddCustomerComponent,
     CustomerListComponent,
-    AddCustomerComponent,
-  ],
+    AddCustomerComponent
+],
   animations: [
     trigger('fadeInOut', [
       state('void', style({ opacity: 0, transform: 'translateY(-10px)' })),

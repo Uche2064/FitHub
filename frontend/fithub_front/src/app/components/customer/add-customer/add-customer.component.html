@@ -1,15 +1,13 @@
-<div class="max-h-full bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+<div class="max-h-full bg-white dark:bg-slate-800 rounded-2xl shadow-sm overflow-hidden mb-6">
   <!-- Header Section -->
-  <div class="bg-gray-50 border-b border-slate-300 px-8 py-6">
-    <h3 class="text-xl font-semibold text-gray-900">Ajouter un Client</h3>
-    <p class="mt-1 text-sm text-gray-500">
+  <div class="bg-gray-50  dark:bg-slate-800 border-b dark:border-slate-700 border-slate-300 px-8 py-6">
+    <h3 class="text-xl font-semibold ">Ajouter un Client</h3>
+    <p class="mt-1 text-sm text-gray-500 dark:text-slate-300">
       Remplissez les informations ci-dessous pour créer un nouveau compte
-      customer
+      client
     </p>
   </div>
-  <div class="px-8 my-2">
-    <app-notification></app-notification>
-  </div>
+
   <!-- Form Section -->
   <form
     [formGroup]="customerForm"
@@ -22,7 +20,7 @@
       <div>
         <label
           for="firstName"
-          class="block text-sm font-medium text-gray-700 mb-3"
+          class="block text-sm font-medium mb-3"
         >
           Prénoms
         </label>
@@ -30,6 +28,7 @@
           <input
             name="firstName"
             formControlName="firstName"
+            id="firstName"
             type="text"
             placeholder="Entrez le ou les prénoms"
             [ngClass]="{
@@ -37,7 +36,7 @@
                 customerForm.get('firstName')?.invalid &&
                 customerForm.get('firstName')?.touched
             }"
-            class="w-full px-4 py-3 border border-red-50 rounded-lg bg-gray-100 focus:bg-white text-gray-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
+            class="w-full px-4 py-3 border border-gray-50 dark:border-slate-700 rounded-lg bg-gray-100 dark:bg-slate-900 dark:focus:bg-slate-700 dark:focus:border-teal-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
           />
           <p
             *ngIf="
@@ -57,13 +56,14 @@
       <div>
         <label
           for="lastName"
-          class="block text-sm font-medium text-gray-700 mb-3"
+          class="block text-sm font-medium mb-3"
         >
           Nom
         </label>
         <div>
           <input
             name="lastName"
+            id="lastName"
             formControlName="lastName"
             type="text"
             placeholder="Entrez le nom de famille"
@@ -72,7 +72,7 @@
                 customerForm.get('lastName')?.invalid &&
                 customerForm.get('lastName')?.touched
             }"
-            class="w-full px-4 py-3 border border-red-50 rounded-lg bg-gray-100 focus:bg-white text-gray-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
+            class="w-full px-4 py-3 border border-gray-50 dark:border-slate-700 rounded-lg bg-gray-100 dark:bg-slate-900 dark:focus:bg-slate-700 dark:focus:border-teal-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
           />
           <div
             *ngIf="
@@ -93,13 +93,14 @@
     <div>
       <label
         for="phoneNumber"
-        class="block text-sm font-medium text-gray-700 mb-3"
+        class="block text-sm font-medium mb-3"
       >
         Numéro de Téléphone
       </label>
       <div>
         <input
           name="phoneNumber"
+          id="phoneNumber"
           formControlName="phoneNumber"
           type="text"
           placeholder="Entrez le numéro de téléphone"
@@ -108,7 +109,7 @@
               customerForm.get('phoneNumber')?.invalid &&
               customerForm.get('phoneNumber')?.touched
           }"
-          class="w-full px-4 py-3 border border-red-50 rounded-lg bg-gray-100 focus:bg-white text-gray-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
+          class="w-full px-4 py-3 border border-gray-50 dark:border-slate-700 rounded-lg bg-gray-100 dark:bg-slate-900 dark:focus:bg-slate-700 dark:focus:border-teal-800 focus:border-teal-500 focus:outline-none transition duration-150 ease-in-out"
         />
         <p
           *ngIf="
@@ -132,7 +133,7 @@
       <button
         type="submit"
         [disabled]="customerForm.invalid || isLoading"
-        class="w-full flex gap-3 justify-center py-3 px-4 border border-transparent cursor-pointer rounded-lg shadow-sm font-semibold text-white bg-[#008080] disabled:bg-gray-300 disabled:cursor-not-allowed"
+        class="w-full flex gap-3 justify-center py-3 px-4 border border-transparent cursor-pointer rounded-lg shadow-sm font-semibold text-white bg-[#008080] disabled:bg-gray-300 disabled:cursor-not-allowed focus:ring-teal-500 dark:disabled:bg-slate-400"
       >
         <svg
           *ngIf="!isLoading"

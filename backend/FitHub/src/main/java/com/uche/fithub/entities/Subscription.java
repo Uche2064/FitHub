@@ -47,7 +47,7 @@ public class Subscription {
     private LocalDateTime updatedAt;
 
     public LocalDate getEndDate() {
-        return startDate.plusMonths(pack.getDurationMonths()); // Fin calculée dynamiquement
+        return startDate.plusMonths(pack.getDurationMonths());
     }
 
     public SubscriptionDto getDto() {
@@ -57,6 +57,7 @@ public class Subscription {
         dto.setPack(this.pack.getDto());
         dto.setStartDate(this.startDate);
         dto.setActive(this.active);
+        dto.setEndDate(this.getEndDate());
         return dto;
     }
 }

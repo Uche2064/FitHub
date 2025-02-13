@@ -1,8 +1,6 @@
 package com.uche.fithub.services.refresh_token_service;
 
 import java.sql.Date;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -16,7 +14,6 @@ import com.uche.fithub.repositories.RefreshTokenRepository;
 import com.uche.fithub.repositories.UserRepository;
 import com.uche.fithub.utils.JwtUtils;
 import com.uche.fithub.utils.TokenRefreshResponse;
-import com.uche.fithub.utils.error.TokenRefreshException;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -40,15 +37,16 @@ public class RefreshTokenService implements IRefreshTokenService {
     @Override
     public TokenRefreshResponse refreshToken(String requestRefreshToken) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(requestRefreshToken)
-                .orElseThrow(() -> new EntityNotFoundException("Jeton de rafraîchissement invalide. Veuillez vous connectez"));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Jeton de rafraîchissement invalide. Veuillez vous connectez"));
 
         RefreshToken verifyRefreshToken = this.verifyRefreshToken(refreshToken)
-                .orElseThrow(() -> new EntityNotFoundException("Jeton de rafraîchissement invalide" ));
+                .orElseThrow(() -> new EntityNotFoundException("Jeton de rafraîchissement invalide"));
         if (Objects.isNull(verifyRefreshToken)) {
             throw new RuntimeException(
                     "Refresh token has expired! Please generate a new one.");
         }
-        String newAccessToken = jwtUtils.generateTokenFromUsername(refreshToken.getUser().getUsername());
+        String newAccessToken = jwtUtils.generateTokenFromUsername(refreshToken.getUser().getUserName());
         return new TokenRefreshResponse(newAccessToken, requestRefreshToken);
     }
 
@@ -71,10 +69,12 @@ public class RefreshTokenService implements IRefreshTokenService {
 
     @Override
     public Optional<RefreshToken> verifyRefreshToken(RefreshToken token) {
+        System.out.println("Verifying refresh token: " + token.getExpiryDate().compareTo(new Date(0)));
         if (token.getExpiryDate().compareTo(new Date(0)) < 0) {
             refreshTokenRepository.delete(token);
             return null;
         }
+        System.out.println("optional token: " + Optional.ofNullable(token));
         return Optional.ofNullable(token);
     }
 

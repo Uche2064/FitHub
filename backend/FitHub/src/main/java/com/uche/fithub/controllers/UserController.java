@@ -1,6 +1,5 @@
 package com.uche.fithub.controllers;
 
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,22 +10,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.uche.fithub.dto.auth_dto.LoginUserSchema;
 import com.uche.fithub.dto.user_dto.AddUserSchema;
 import com.uche.fithub.dto.user_dto.UpdatePasswordUserSchema;
 import com.uche.fithub.dto.user_dto.UpdateUserInfoSchema;
 import com.uche.fithub.dto.user_dto.UserDto;
 import com.uche.fithub.services.auth.AuthService;
 import com.uche.fithub.services.user_service.UserService;
-import com.uche.fithub.utils.JwtResponse;
 
 import jakarta.persistence.EntityExistsException;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/v1/user/")
@@ -41,6 +35,7 @@ public class UserController {
     @PostMapping("register")
     public ResponseEntity<?> register(@Valid @RequestBody AddUserSchema user) {
         try {
+            System.out.println("user: " + user);
             UserDto userDto = userService.addUser(user);
             return new ResponseEntity<>(userDto, HttpStatus.CREATED);
         } catch (EntityExistsException e) {

@@ -1,0 +1,13 @@
+<section class="flex justify-between items-center">
+  <h1 class="text-2xl font-semibold mb-3">Gestion des abonnements</h1>
+  <app-notification></app-notification>
+</section>
+<app-add-subscription
+  [customers]="customers"
+  [packs]="packs"
+  (loadCustomersWithInactiveSub)="loadCustomersWithInactiveSub()"
+></app-add-subscription>
+
+<app-subscription-list
+  (loadCustomersWithInactiveSub)="loadCustomersWithInactiveSub()"
+></app-subscription-list>
