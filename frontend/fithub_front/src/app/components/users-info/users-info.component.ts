@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { UpdateCustomerSchema } from '../customer/models/UpdateCustomerSchema';
+import { UpdateUserInfo } from './models/UpdateUserInfo';
+import { SharedService } from '../../services/shared_service/shared.service';
 
 @Component({
   selector: 'app-users-info',
@@ -9,5 +12,5 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './users-info.component.css'
 })
 export class UsersInfoComponent {
-
+  
 }

@@ -17,6 +17,7 @@ import { CommonModule } from '@angular/common';
 import { AddUserSchema } from './models/AddUserSchema';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
+import { UserService } from '../../services/user_service/user.service';
 
 @Component({
   selector: 'app-register-user',
@@ -47,6 +48,7 @@ export class RegisterUserComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private userService: UserService,
     private route: Router,
     private notificationService: NotificationService
   ) {
@@ -69,7 +71,7 @@ export class RegisterUserComponent {
       this.user = this.userForm.value;
       this.loginCredentials = new LoginSchema(this.user.userName, this.user.password);
       console.log("Login: " + this.loginCredentials.userName + " " + this.loginCredentials.password);
-      this.authService.saveUser(this.user).subscribe((newUser) => {
+      this.userService.saveUser(this.user).subscribe((newUser) => {
         if (newUser) {
           this.isLoading = false;
           this.notificationService.notify(new CustomMessage('Utilisateur crée avec succès.', 'success'));

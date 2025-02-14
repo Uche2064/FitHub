@@ -10,15 +10,17 @@ import { RefreshTokenResponseSchema } from '../../utils/schemas/RefreshTokenResp
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AddUserSchema } from '../../components/register-user/models/AddUserSchema';
 import { AddUserResponseSchema } from '../../components/register-user/models/AddUserResponseScheema';
+import { UpdateUserInfo } from '../../components/users-info/models/UpdateUserInfo';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+
   private readonly API_BASE_URL = 'http://localhost:8081/api/v1/auth';
   private readonly loginUrl = `${this.API_BASE_URL}/login`;
   private readonly logoutUrl = `${this.API_BASE_URL}/logout`;
-  private readonly registerUrl = `http://localhost:8081/api/v1/user/register`;
+
   private readonly refreshTokenUrl = `${this.API_BASE_URL}/refresh`;
 
   private currentUserSubject = new BehaviorSubject<LoginResponseSchema | null>(null);
@@ -37,6 +39,8 @@ export class AuthService {
     return !!accessToken && !this.jwtHelper.isTokenExpired(accessToken);
   }
 
+
+
   private loadStoredUser() {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
@@ -49,6 +53,7 @@ export class AuthService {
       }
     }
   }
+
 
   refreshToken(): Observable<RefreshTokenResponseSchema> {
     const refreshToken = localStorage.getItem('refresh_token');
@@ -102,10 +107,7 @@ export class AuthService {
     );
   }
 
-  saveUser(newUser: AddUserSchema): Observable<AddUserResponseSchema> {
-    return this.http.post<AddUserResponseSchema>(this.registerUrl, newUser);
 
-  }
 
   private handleLoginSuccess(response: LoginResponseSchema) {
     if (!response?.accessToken || !response?.refreshToken) {

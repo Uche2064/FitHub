@@ -64,7 +64,7 @@ export class CustomerListComponent implements OnInit {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
       this.sortBy = sortField;
-      this.sortDirection = 'asc';
+      this.sortDirection = 'desc';
     }
     this.loadCustomers();
   }

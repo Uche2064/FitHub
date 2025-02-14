@@ -13,4 +13,6 @@ public interface IUserService {
     public UserDto changePassword(UpdatePasswordUserSchema user);
     public UserDto addUser(AddUserSchema user);
     public UserDto updateUserInfo(UpdateUserInfoSchema user);
+    public UserDto getCurrentUser();
+    public void deleteUser();
 }

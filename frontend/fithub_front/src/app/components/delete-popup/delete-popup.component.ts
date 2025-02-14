@@ -12,8 +12,8 @@ export class DeletePopupComponent {
   @Input() isVisible: boolean = false;
   @Input() title: string = 'Confirmer la suppression';
   @Input() message: string = 'Are you sure you want to delete this item?';
-  @Input() confirmButtonText: string = 'Delete';
-  @Input() cancelButtonText: string = 'Cancel';
+  @Input() confirmButtonText: string = 'Oui';
+  @Input() cancelButtonText: string = 'Annuler';
 
   @Output() confirm = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();

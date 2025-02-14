@@ -49,6 +49,7 @@ public class PackController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePack(@PathVariable Long id) {
         try {
+            System.out.println(id);
             packService.deletePack(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (EntityNotFoundException e) {
@@ -57,8 +58,7 @@ public class PackController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (RuntimeException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

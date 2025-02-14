@@ -20,7 +20,8 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
     List<Subscription> findAllByActiveTrue();
 
-    Optional<Subscription> findByPack(Pack pack);
+    @Query("SELECT s FROM Subscription s WHERE s.pack.id = ?1")
+    List<Subscription> findByPack(@Param("packId") Long packId);
 
 
 

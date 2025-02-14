@@ -29,6 +29,14 @@ export class SubscriptionComponent implements OnInit {
   subscriptionToDelete: number = 0;
   showFilters: boolean = false;
 
+  searchTerm: string = '';
+  currentPage: number = 0;
+  pageSize: number = 5;
+  totalPages: number = 1;
+  sortBy: string = "customer";
+  sortDirection: any;
+  subscriptions: SubscriptionDto[] = [];
+
   constructor(
     private fb: FormBuilder,
     private subscriptionService: SubscriptionService,
@@ -71,6 +79,21 @@ export class SubscriptionComponent implements OnInit {
       (error: HttpErrorResponse) => {
         console.error('Error fetching customers:', error);
         this.notificationService.notify(new CustomMessage('Erreur lors de la récupération des clients', 'error'));
+      }
+    );
+  }
+
+  loadSubscriptions() {
+    this.subscriptionService.fetSubscriptions(this.currentPage, this.pageSize, this.sortBy);
+    this.subscriptionService.getPaginatedSubscriptions().subscribe(
+      (data: SubscriptionDto[]) => {
+        this.subscriptions = data;
+        this.subscriptionService.totalPages$.subscribe(total => this.totalPages = total);
+        console.log(data);
+      },
+      (error: HttpErrorResponse) => {
+        console.log(error);
+        this.notificationService.notify(new CustomMessage('Erreur lors de la récupération', 'error'));
       }
     );
   }

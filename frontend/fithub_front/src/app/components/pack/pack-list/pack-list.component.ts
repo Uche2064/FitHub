@@ -117,6 +117,7 @@ export class PackListComponent implements OnInit {
 
 
     }, (error: HttpErrorResponse) => {
+      console.log(error);
       this.notificationService.notify(new CustomMessage(error.error, 'error'))
     });
   }

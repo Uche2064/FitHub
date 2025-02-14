@@ -1,8 +1,12 @@
 package com.uche.fithub.services.pack_service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import javax.management.RuntimeErrorException;
+
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,7 @@ import com.uche.fithub.repositories.SubscriptionRepository;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
+import com.uche.fithub.entities.Subscription;
 
 @Service
 public class PackServiceImpl implements IPackService {
@@ -32,7 +37,7 @@ public class PackServiceImpl implements IPackService {
         }
         Pack newPack = new Pack();
         newPack.setMonthlyPrice(pack.getMonthlyPrice());
-        newPack.setOfferName(pack.getOfferName().toLowerCase());
+        newPack.setOfferName(pack.getOfferName());
         newPack.setDurationMonths(pack.getDurationMonths());
         Pack savedPack = packRepository.save(newPack);
         return savedPack.getDto();
@@ -46,12 +51,14 @@ public class PackServiceImpl implements IPackService {
 
     @Override
     public void deletePack(Long packId) {
-        Pack dbPack = packRepository.findById(packId)
-                .orElseThrow(() -> new EntityNotFoundException("L'offre avec l'id '" + packId + "' n'existe pas"));
+        // Pack dbPack = packRepository.findById(packId)
+        // .orElseThrow(() -> new EntityNotFoundException("L'offre avec l'id '" + packId
+        // + "' n'existe pas"));
 
-        if (!subscriptionRepository.findByPack(dbPack).isEmpty()) {
+        List<Subscription> dbSubs = subscriptionRepository.findByPack(packId);
+        if (!dbSubs.isEmpty()) {
             throw new RuntimeException(
-                    "Impossible de supprimer un pack en cours avec des utilisateurs qui y sont encore inscrit");
+                    "Impossible de supprimer un abonnement avec des utilisateurs qui y sont encore inscrit");
         }
         packRepository.deleteById(packId);
     }

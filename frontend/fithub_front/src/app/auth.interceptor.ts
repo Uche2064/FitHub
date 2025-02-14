@@ -52,6 +52,7 @@ export const authInterceptor: HttpInterceptorFn = (
           isRefreshing.value = false;
           refreshTokenSubject.next(null);
           authService.logout();
+          console.log(error);
           return throwError(() => new Error('Token refresh failed'));
         })
       );

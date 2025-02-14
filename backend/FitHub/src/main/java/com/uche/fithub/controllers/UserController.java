@@ -1,6 +1,5 @@
 package com.uche.fithub.controllers;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +17,12 @@ import com.uche.fithub.services.auth.AuthService;
 import com.uche.fithub.services.user_service.UserService;
 
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/v1/user/")
@@ -45,6 +47,18 @@ public class UserController {
         }
     }
 
+    @GetMapping
+    public ResponseEntity<?> getCurrentUser() {
+        try {
+            UserDto dbUser = userService.getCurrentUser();
+            return new ResponseEntity<>(dbUser, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping("change-password")
     public ResponseEntity<?> updatePassword(@Valid @RequestBody UpdatePasswordUserSchema entity) {
         try {
@@ -65,6 +79,16 @@ public class UserController {
 
         } catch (UsernameNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteUser() {
+        try {
+            userService.deleteUser();
+            return new ResponseEntity<>( HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

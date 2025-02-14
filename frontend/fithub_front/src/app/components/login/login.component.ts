@@ -55,6 +55,10 @@ export class LoginComponent implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.route.navigate(['']);
     }
+
+    if (localStorage.getItem("isDarkMode")) {
+      document.body.classList.toggle('dark', JSON.parse(localStorage.getItem("isDarkMode") ?? 'true'));
+    }
   }
 
   onSubmit() {

@@ -93,4 +93,26 @@ public class UserService implements IUserService {
 
     }
 
+    @Override
+    public UserDto getCurrentUser() {
+        String userName = authService.getAuthenticatedUsername();
+        User dbUser = userRepository.findByUserName(userName);
+        if (Objects.isNull(dbUser)) {
+            throw new EntityNotFoundException("Utilisateur non trouvé");
+        }
+        return dbUser.getDto();
+    }
+
+    @Override
+    public void deleteUser() {
+        String userName = authService.getAuthenticatedUsername();
+        User dbUser = userRepository.findByUserName(userName);
+        if (Objects.isNull(dbUser)) {
+            throw new EntityNotFoundException("Utilisateur non trouvé");
+        }
+        userRepository.delete(dbUser);
+    }
+
+    
+
 }

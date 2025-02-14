@@ -5,6 +5,7 @@
 <app-add-subscription
   [customers]="customers"
   [packs]="packs"
+  (loadSubscription)="loadSubscriptions()"
   (loadCustomersWithInactiveSub)="loadCustomersWithInactiveSub()"
 ></app-add-subscription>
 

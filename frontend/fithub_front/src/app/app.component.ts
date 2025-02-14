@@ -12,7 +12,7 @@ import { AuthCheckSchema } from './global_model/AuthCheckSchema';
 export class AppComponent implements OnInit {
   access_token: string | null;
   currentUser: string | null;
-  
+
 
   constructor(private router: Router, private autheService: AuthService) {
     this.access_token = localStorage.getItem('access_token');
@@ -25,9 +25,9 @@ export class AppComponent implements OnInit {
       this.autheService.logout();
       return;
     }
+    console.log('Access token')
     if (localStorage.getItem("isDarkMode")) {
       document.body.classList.toggle('dark', JSON.parse(localStorage.getItem("isDarkMode") ?? 'true'));
-
     }
   }
 }

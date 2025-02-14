@@ -4,9 +4,9 @@ export class UpdateCustomerSchema {
   phoneNumber: string;
 
   constructor(
-    firstName: string,
-    lastName: string,
-    phoneNumber: string,
+    firstName: string = '',
+    lastName: string = '',
+    phoneNumber: string ='',
   ) {
     this.firstName = firstName;
     this.lastName = lastName;
